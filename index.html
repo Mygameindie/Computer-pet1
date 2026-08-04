@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;" />
+  <title>Desktop Pet</title>
+  <link rel="stylesheet" href="pet_style.css" />
+</head>
+
+<body>
+  <!-- The pet lives in every overlay window; each window positions it by
+       subtracting its own display origin, so it is only visible on the
+       monitor it is actually standing on. -->
+  <div class="pet" id="pet">
+    <canvas class="pet-canvas"></canvas>
+  </div>
+
+  <!-- Wardrobe dock. outfit_system.js / outfit_presets.js look for these exact
+       ids and adopt them instead of creating their own fixed-position buttons.
+       The dock is pinned to the top of the screen (see pet_style.css). -->
+  <div id="wardrobe-dock">
+    <div id="dock-bar">
+      <button id="dressup-btn">👗 Dress Up</button>
+      <button id="preset-btn">🎀 Outfits</button>
+    </div>
+    <div id="dressup-panel" style="display:none"></div>
+    <div id="preset-panel" style="display:none"></div>
+  </div>
+
+  <!-- Must load before the outfit system: it rewrites the bare image names used
+       in outfit_config.js ("top1.png") to "images/top1.png". -->
+  <script src="asset_path_fix.js"></script>
+  <script src="outfit_config.js"></script>
+  <script src="outfit_system.js"></script>
+  <script src="outfit_presets.js"></script>
+  <script src="pet_desktop.js"></script>
+</body>
+
+</html>

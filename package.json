@@ -1,0 +1,72 @@
+{
+  "name": "computer-pet1",
+  "version": "1.0.0",
+  "description": "Single-pet desktop companion — drag it anywhere on screen, dress it up, and keep clicking straight through to your desktop.",
+  "main": "main.js",
+  "author": "Mygameindie",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "start:bg": "node scripts/start-detached.js",
+    "shortcut": "node scripts/make-shortcut.js",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0"
+  },
+  "build": {
+    "appId": "com.mygameindie.computerpet1",
+    "productName": "Desktop Pet Single",
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html",
+      "pet_style.css",
+      "pet_desktop.js",
+      "asset_path_fix.js",
+      "outfit_config.js",
+      "outfit_system.js",
+      "outfit_presets.js",
+      "images/**"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "universal"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "universal"
+          ]
+        }
+      ],
+      "category": "public.app-category.entertainment",
+      "extendInfo": {
+        "LSUIElement": true
+      }
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "Game"
+    }
+  }
+}
