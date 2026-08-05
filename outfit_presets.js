@@ -40,18 +40,6 @@ window.OUTFIT_PRESETS = [
     // Art is already coloured — leave it as drawn.
   },
   {
-    name: "Casual",
-    emoji: "👕",
-    clothes: { top: "top1", bottom: "pants1", shoes: "shoes1" },
-    colors:  { bottom: "Blue" },
-  },
-  {
-    name: "Skirt Day",
-    emoji: "🌸",
-    clothes: { top: "top1", bottom: "skirt1", shoes: "shoes1", hat: "hat1" },
-    colors:  { top: "Pink", bottom: "Purple" },
-  },
-  {
     name: "Party Dress",
     emoji: "🎀",
     clothes: { dress: "dress1", shoes: "shoes1", hat: "hat1" },
