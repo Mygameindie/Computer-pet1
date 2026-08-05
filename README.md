@@ -60,6 +60,12 @@ first run (a few minutes, it's fetching Electron) and launches the pet after
 that. It needs [Node.js](https://nodejs.org) installed first; if it isn't, the
 launcher tells you the one command to fix that.
 
+Just installed Node and the launcher still says it isn't there? Sign out of
+Windows and back in. Double-clicking a `.bat` runs it with the environment
+Explorer started with, and Explorer only reloads `PATH` at sign-in — so a new
+PowerShell window finding `node` doesn't mean the launcher can. (It now looks in
+the standard install folders as well, so this should be rare.)
+
 That first run is the only one with a window worth looking at. After it, the
 batch file hands straight over to `start-pet-hidden.vbs` and quits, so all you
 see is a blink of a console as Windows opens and closes it. **Closing that

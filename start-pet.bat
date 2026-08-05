@@ -40,20 +40,40 @@ endlocal
 exit /b 0
 
 :launch
-where node >nul 2>nul
-if errorlevel 1 (
+REM Find Node. PATH is the normal way, but a double-clicked .bat inherits
+REM Explorer's environment, and Explorer only picks up a changed PATH when you
+REM sign in - so Node installed five minutes ago is invisible here even though
+REM it works fine in a new PowerShell window. Checking where it actually lives
+REM means a fresh install runs straight away instead of after a sign-out.
+set "NODE_EXE="
+for %%N in (node.exe) do if not defined NODE_EXE set "NODE_EXE=%%~$PATH:N"
+if not defined NODE_EXE if exist "%ProgramFiles%\nodejs\node.exe" set "NODE_EXE=%ProgramFiles%\nodejs\node.exe"
+if not defined NODE_EXE if exist "%ProgramW6432%\nodejs\node.exe" set "NODE_EXE=%ProgramW6432%\nodejs\node.exe"
+if not defined NODE_EXE if exist "%ProgramFiles(x86)%\nodejs\node.exe" set "NODE_EXE=%ProgramFiles(x86)%\nodejs\node.exe"
+if not defined NODE_EXE if exist "%LOCALAPPDATA%\Programs\nodejs\node.exe" set "NODE_EXE=%LOCALAPPDATA%\Programs\nodejs\node.exe"
+if not defined NODE_EXE if exist "%APPDATA%\nvm\nodejs\node.exe" set "NODE_EXE=%APPDATA%\nvm\nodejs\node.exe"
+
+if not defined NODE_EXE (
   echo.
   echo   Node.js is not installed.
   echo.
   echo   Install it by running this in PowerShell:
   echo       winget install OpenJS.NodeJS.LTS
   echo.
-  echo   Then close all PowerShell windows, open a new one,
-  echo   and double-click this file again.
+  echo   ...or download the Windows LTS installer from https://nodejs.org
+  echo.
+  echo   Then SIGN OUT of Windows and back in ^(or restart^) before running
+  echo   this file again. Double-clicking a .bat doesn't see a newly
+  echo   installed Node until Windows reloads your PATH at sign-in - so
+  echo   opening a new PowerShell window on its own is not enough.
   echo.
   if not defined PET_QUIET pause
   exit /b 1
 )
+
+REM Put Node's own folder first on PATH for the rest of this script, so npm and
+REM anything npm shells out to are found too - the same reason node was not.
+for %%D in ("%NODE_EXE%") do set "PATH=%%~dpD;%PATH%"
 
 if not exist "node_modules\electron\dist\electron.exe" (
   echo.
