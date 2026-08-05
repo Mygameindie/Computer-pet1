@@ -40,12 +40,6 @@ window.OUTFIT_PRESETS = [
     // Art is already coloured — leave it as drawn.
   },
   {
-    name: "Party Dress",
-    emoji: "🎀",
-    clothes: { dress: "dress1", shoes: "shoes1", hat: "hat1" },
-    colors:  { dress: "Red", hat: "Yellow" },
-  },
-  {
     name: "Comfy",
     emoji: "🩲",
     clothes: { topUnderwear: "topunderwear1", bottomUnderwear: "bottomunderwear1" },
