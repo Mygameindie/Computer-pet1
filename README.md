@@ -46,6 +46,14 @@ Grab the **whole repository**, not individual files:
 - **Code → Download ZIP** on GitHub, then extract it, or
 - `git clone https://github.com/Mygameindie/Computer-pet1.git`
 
+**Extract the ZIP first — don't run `start-pet.bat` from inside it.** Double-clicking
+a folder in Explorer opens the ZIP in a window that looks exactly like a normal
+folder, and Windows will run a `.bat` straight out of it: it copies *only that one
+file* to a temp folder and starts it there, without `package.json`, `scripts/` or
+`images/`. The launcher stops with an explanation if that happens, so if you see
+"This is still inside the .zip", click **Extract all** and run it from the real
+folder instead.
+
 Downloading `start-pet.bat` on its own doesn't work: Chrome and Edge block every
 `.bat` download by extension, before looking at what's inside — an empty batch
 file gets refused too, and `.vbs` gets the same treatment. Inside a ZIP they

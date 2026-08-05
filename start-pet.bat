@@ -20,6 +20,31 @@ REM /quiet means we were started by start-pet-hidden.vbs, into a window nobody
 REM can see: never stop for a keypress, and never hand back to the .vbs.
 if /i "%~1"=="/quiet" set "PET_QUIET=1"
 
+REM Double-clicked straight out of the .zip? Explorer will happily run a .bat
+REM from inside a zip, but it extracts ONLY that one file to a temp folder
+REM first - the rest of the app never comes with it. Everything below would
+REM then fail deep inside npm or node with a path nobody recognises, so check
+REM for the files that must be sitting beside this one and say so plainly.
+if exist "%~dp0package.json" if exist "%~dp0scripts\start-detached.js" goto :extracted
+
+echo.
+echo   This is still inside the .zip.
+echo.
+echo   Windows ran this file out of the archive, on its own - the rest of
+echo   the pet ^(package.json, scripts, images^) did not come with it, so
+echo   there is nothing here to start.
+echo.
+echo   Fix it in three clicks:
+echo     1. Close this window.
+echo     2. In the zip window, click "Extract all" and pick a real folder
+echo        ^(Desktop or Documents is fine^).
+echo     3. Open THAT folder and double-click start-pet.bat there.
+echo.
+if not defined PET_QUIET pause
+exit /b 1
+
+:extracted
+
 REM Hand straight over to the windowless launcher when we can. A .bat always
 REM gets a console - Windows creates it before cmd.exe runs a single line - but
 REM handing over this early keeps it to a blink instead of a window that sits
