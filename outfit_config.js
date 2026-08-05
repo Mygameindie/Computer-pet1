@@ -72,11 +72,13 @@ window.OUTFIT_CONFIG = {
   },
 
   // What the pet is wearing on a fresh start. Anything left out starts as None.
+  // This is the Mozzarella Cookie look: horned hat, blue dress, gold shoes,
+  // with the matching separate underwear set underneath.
   defaults: {
-    onepieceUnderwear: "onepieceunderwear1",
-    glove: "glove1",
+    topUnderwear: "topunderwear1",
+    bottomUnderwear: "bottomunderwear1",
+    dress: "dress1",
     shoes: "shoes1",
-    ears: "ears1",
-    bunnysuitbow: "bunnysuitbow1",
+    hat: "hat1",
   },
 };

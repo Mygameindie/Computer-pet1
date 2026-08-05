@@ -28,6 +28,18 @@
 
 window.OUTFIT_PRESETS = [
   {
+    name: "Mozzarella Cookie",
+    emoji: "🧀",
+    clothes: {
+      topUnderwear: "topunderwear1",
+      bottomUnderwear: "bottomunderwear1",
+      dress: "dress1",
+      shoes: "shoes1",
+      hat: "hat1",
+    },
+    // Art is already coloured — leave it as drawn.
+  },
+  {
     name: "Casual",
     emoji: "👕",
     clothes: { top: "top1", bottom: "pants1", shoes: "shoes1" },
