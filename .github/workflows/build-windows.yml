@@ -1,26 +1,22 @@
 # ===========================================================
 #  Build the Windows app
 # ===========================================================
-# Produces a real .exe with Electron packaged inside it, so people who just
-# want the pet don't need Node.js, don't need npm install, and don't need to
-# extract anything. One file comes out of a run:
+# Produces a real .exe with Electron packaged inside it, so anyone who just
+# wants the pet needs no Node.js, no npm install, and nothing to extract.
+# One file comes out of a run:
 #
 #   DesktopPet-<version>.exe   double-click it, the pet appears
 #
-# Deliberately NOT an installer: nothing to install, nothing in the Start Menu,
+# Deliberately NOT an installer: nothing installed, nothing in the Start Menu,
 # nothing to uninstall. Keep the file wherever you like, delete it when done.
 #
-# Three ways to run it:
-#   * Push to the working branch. Publishes a rolling "latest" pre-release with
-#     the .exe on it, replaced by each new push. This is the everyday one.
-#   * Push a tag starting with v (git tag v1.0.0 && git push origin v1.0.0),
-#     or publish a release from the website. Either makes a proper versioned
-#     release with the .exe attached.
-#   * Actions tab -> "Build Windows app" -> Run workflow. (Only shows up once
-#     this file is on the repository's default branch.)
+# Runs on a push to ANY branch. Each branch keeps its own rolling release named
+# after it (build-<branch>), so branches never overwrite each other's download.
+# Pushing a v* tag - or publishing a release from the website - makes a proper
+# versioned release instead.
 #
-# Every route attaches the .exe to a Release, because a Release asset is a
-# direct download - Actions artifacts are always wrapped in a ZIP by GitHub.
+# The .exe is attached to a Release because a Release asset is a direct
+# download; Actions artifacts are always wrapped in a ZIP by GitHub.
 # ===========================================================
 
 name: Build Windows app
@@ -28,10 +24,10 @@ name: Build Windows app
 on:
   workflow_dispatch:
   push:
+    branches:
+      - "**"
     tags:
       - "v*"
-    branches:
-      - "claude/mozzarella-cookie-outfit-frhx7e"
 
 permissions:
   contents: write
@@ -50,40 +46,44 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # --publish never: electron-builder tries to upload to a GitHub release
-      # by itself on a tag build. The release step below does that, so this
-      # keeps the two from racing each other.
+      # --publish never: electron-builder will try to upload to a GitHub release
+      # by itself on a tag build. The release step below does that, so this stops
+      # the two racing each other.
       - name: Build
         run: npm run build:win -- --publish never
 
-      - name: Upload the .exe files
+      - name: Upload the .exe
         uses: actions/upload-artifact@v4
         with:
           name: desktop-pet-windows
           path: dist/*.exe
           if-no-files-found: error
 
-      # A tag build gets its own versioned release; a branch build keeps
-      # replacing one rolling "latest" pre-release. Either way the release may
-      # already exist - publishing from the website creates it before this runs,
-      # and "latest" is reused on purpose - so attach to it when it's there.
       - name: Publish release
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          # @( ) matters: with one .exe this would otherwise be a plain string,
-          # and passing a string where a list is expected makes PowerShell
-          # enumerate its characters - gh then sees "D" (from D:\a\...) as an
-          # argument and fails with "no matches found".
+          # @( ) matters: with a single .exe this would otherwise be a plain
+          # string, and passing a string where a list is expected makes
+          # PowerShell enumerate its characters - gh then sees "D" (from
+          # D:\a\...) as an argument and fails with "no matches found".
           $exes = @(Get-ChildItem -Path dist -Filter *.exe | ForEach-Object { $_.FullName })
           if ($exes.Count -eq 0) { throw "No .exe was built." }
           Write-Host "Built: $($exes -join ', ')"
 
           if ($env:GITHUB_REF -like 'refs/tags/*') {
-            $tag = $env:GITHUB_REF_NAME; $title = "Desktop Pet $tag"; $pre = $false
+            # A version tag gets a permanent release of its own.
+            $tag   = $env:GITHUB_REF_NAME
+            $title = "Desktop Pet $tag"
+            $pre   = $false
           } else {
-            $tag = 'latest'; $title = 'Latest build'; $pre = $true
+            # A branch gets one rolling release, replaced by each push to it.
+            # Slashes aren't legal in a tag name, hence the substitution.
+            $safe  = $env:GITHUB_REF_NAME -replace '[^A-Za-z0-9._-]', '-'
+            $tag   = "build-$safe"
+            $title = "Latest build ($env:GITHUB_REF_NAME)"
+            $pre   = $true
           }
 
           $notes = "Download the .exe below and double-click it. " +
@@ -102,5 +102,4 @@ jobs:
           }
           if ($LASTEXITCODE -ne 0) { throw "Publishing the release failed." }
 
-          $repo = $env:GITHUB_REPOSITORY
-          Write-Host "Download: https://github.com/$repo/releases/tag/$tag"
+          Write-Host "Download: https://github.com/$env:GITHUB_REPOSITORY/releases/tag/$tag"
