@@ -1,7 +1,7 @@
 {
   "name": "computer-pet1",
   "version": "1.0.0",
-  "description": "Single-pet desktop companion — drag it anywhere on screen, dress it up, and keep clicking straight through to your desktop.",
+  "description": "Single-pet desktop companion \u2014 drag it anywhere on screen, dress it up, and keep clicking straight through to your desktop.",
   "main": "main.js",
   "author": "Mygameindie",
   "license": "MIT",
@@ -34,13 +34,11 @@
     ],
     "win": {
       "target": [
-        "nsis",
         "portable"
       ]
     },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true
+    "portable": {
+      "artifactName": "DesktopPet-${version}.exe"
     },
     "mac": {
       "target": [
