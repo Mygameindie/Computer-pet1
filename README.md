@@ -39,7 +39,29 @@ Built on Electron, so the same code runs on **Windows** and **macOS**.
 
 ## Running it
 
-### Getting the files
+### The easy way: download the app (Windows)
+
+Go to **[Releases](https://github.com/Mygameindie/Computer-pet1/releases)** and
+download **`DesktopPet-Portable-<version>.exe`**. Double-click it and the pet
+appears. That's the whole procedure — no Node.js, no `npm install`, no ZIP to
+extract, nothing to keep in a folder. Electron is packaged inside the `.exe`,
+which is why it's around 100 MB.
+
+There's an installer next to it (`Desktop Pet Single Setup <version>.exe`) if
+you'd rather have a Start Menu entry and an uninstaller. The portable one is a
+single file you can put anywhere and delete when you're bored of it.
+
+Windows will probably show a SmartScreen warning the first time, because the
+`.exe` isn't signed with a paid certificate — **More info → Run anyway**.
+
+**No releases listed yet?** Then nobody has built one. See
+[Building the app](#building-the-app) below — it's one tag push.
+
+### Getting the files (to change the pet)
+
+Everything below is for editing the pet: adding clothes, changing the art,
+altering how it behaves. If you only want to *use* it, the download above is all
+you need.
 
 Grab the **whole repository**, not individual files:
 
@@ -181,7 +203,30 @@ npm start            # stays attached to this terminal
 terminal, and you get the console output. Closing PowerShell after `npm start`
 takes the pet with it — that's what `start:bg` is for.
 
-## Building installers
+## Building the app
+
+### With GitHub Actions (no Windows machine needed)
+
+`.github/workflows/build-windows.yml` builds the `.exe` on a Windows runner.
+Tag a commit and the built files are published to Releases automatically:
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+A few minutes later, **Releases** has `DesktopPet-Portable-1.0.0.exe` and the
+installer attached as direct downloads. Bump the number for each new release —
+a tag can only be used once.
+
+To build without publishing, use **Actions → Build Windows app → Run workflow**.
+The `.exe` files end up under that run's **Artifacts** instead (GitHub wraps
+artifacts in a ZIP, so a Release is the better link to hand to anyone else).
+
+> The workflow only appears in the Actions tab once it's on the default branch.
+> Pushing a tag works from any branch.
+
+### On your own machine
 
 ```bash
 npm run build:win    # Windows: NSIS installer + portable .exe
@@ -191,6 +236,9 @@ npm run build:mac    # macOS: universal (Intel + Apple Silicon) .dmg and .zip
 Output lands in `dist/`. Each platform's installer must be built on that
 platform (or in CI) — electron-builder can't produce a signed macOS app from
 Windows or vice versa.
+
+The app icon is `build/icon.ico` (and `build/icon.png` for macOS and Linux). It's
+the pet in its default outfit — regenerate it if you change the base art.
 
 > **macOS note:** the app is unsigned. On first launch, right-click it in
 > Finder → **Open** to get past Gatekeeper. It runs as a menu-bar-only app
