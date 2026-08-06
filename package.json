@@ -33,10 +33,14 @@
       "images/**"
     ],
     "win": {
+      "icon": "build/icon.ico",
       "target": [
         "nsis",
         "portable"
       ]
+    },
+    "portable": {
+      "artifactName": "DesktopPet-Portable-${version}.exe"
     },
     "nsis": {
       "oneClick": false,
