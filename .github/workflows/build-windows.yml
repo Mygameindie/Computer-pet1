@@ -3,17 +3,19 @@
 # ===========================================================
 # Produces a real .exe with Electron packaged inside it, so people who just
 # want the pet don't need Node.js, don't need npm install, and don't need to
-# extract anything. Two files come out of a run:
+# extract anything. One file comes out of a run:
 #
-#   DesktopPet-Portable-<version>.exe   one file, double-click it, pet appears
-#   Desktop Pet Single Setup <ver>.exe  installer, adds a Start Menu entry
+#   DesktopPet-<version>.exe   double-click it, the pet appears
+#
+# Deliberately NOT an installer: nothing to install, nothing in the Start Menu,
+# nothing to uninstall. Keep the file wherever you like, delete it when done.
 #
 # Two ways to run it:
 #   * Actions tab -> "Build Windows app" -> Run workflow. The .exe files land
 #     in the run's Artifacts (GitHub zips artifacts - that's its own doing).
 #   * Push a tag starting with v (git tag v1.0.0 && git push origin v1.0.0).
-#     That also publishes a Release with the .exe files attached as direct
-#     downloads - no zip, which is what you want people clicking on.
+#     That also publishes a Release with the .exe attached as a direct
+#     download - no zip, which is what you want people clicking on.
 # ===========================================================
 
 name: Build Windows app

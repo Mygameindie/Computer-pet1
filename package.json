@@ -35,16 +35,11 @@
     "win": {
       "icon": "build/icon.ico",
       "target": [
-        "nsis",
         "portable"
       ]
     },
     "portable": {
-      "artifactName": "DesktopPet-Portable-${version}.exe"
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true
+      "artifactName": "DesktopPet-${version}.exe"
     },
     "mac": {
       "target": [

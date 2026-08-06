@@ -42,14 +42,19 @@ Built on Electron, so the same code runs on **Windows** and **macOS**.
 ### The easy way: download the app (Windows)
 
 Go to **[Releases](https://github.com/Mygameindie/Computer-pet1/releases)** and
-download **`DesktopPet-Portable-<version>.exe`**. Double-click it and the pet
-appears. That's the whole procedure — no Node.js, no `npm install`, no ZIP to
-extract, nothing to keep in a folder. Electron is packaged inside the `.exe`,
-which is why it's around 100 MB.
+download **`DesktopPet-<version>.exe`**. Double-click it and the pet appears.
+That's the whole procedure — no Node.js, no `npm install`, no ZIP to extract.
+Electron is packaged inside the `.exe`, which is why it's around 100 MB.
 
-There's an installer next to it (`Desktop Pet Single Setup <version>.exe`) if
-you'd rather have a Start Menu entry and an uninstaller. The portable one is a
-single file you can put anywhere and delete when you're bored of it.
+**It does not install itself.** There's no setup wizard, no Start Menu entry,
+nothing added to your startup, and nothing to uninstall — it's one file you can
+keep on the Desktop, move to a USB stick, or delete when you're bored of it.
+
+Nor does it put a window on your screen: the pet is drawn on a transparent
+always-on-top overlay with no frame and no taskbar button, and clicks pass
+straight through it to whatever's underneath. All you see is the pet, plus a
+small tray icon by the clock — which is how you quit it (right-click the pet
+works too).
 
 Windows will probably show a SmartScreen warning the first time, because the
 `.exe` isn't signed with a paid certificate — **More info → Run anyway**.
@@ -215,9 +220,8 @@ git tag v1.0.0
 git push origin v1.0.0
 ```
 
-A few minutes later, **Releases** has `DesktopPet-Portable-1.0.0.exe` and the
-installer attached as direct downloads. Bump the number for each new release —
-a tag can only be used once.
+A few minutes later, **Releases** has `DesktopPet-1.0.0.exe` attached as a direct
+download. Bump the number for each new release — a tag can only be used once.
 
 To build without publishing, use **Actions → Build Windows app → Run workflow**.
 The `.exe` files end up under that run's **Artifacts** instead (GitHub wraps
@@ -229,7 +233,7 @@ artifacts in a ZIP, so a Release is the better link to hand to anyone else).
 ### On your own machine
 
 ```bash
-npm run build:win    # Windows: NSIS installer + portable .exe
+npm run build:win    # Windows: a single self-contained .exe (no installer)
 npm run build:mac    # macOS: universal (Intel + Apple Silicon) .dmg and .zip
 ```
 
