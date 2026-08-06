@@ -212,16 +212,24 @@ takes the pet with it — that's what `start:bg` is for.
 
 ### With GitHub Actions (no Windows machine needed)
 
-`.github/workflows/build-windows.yml` builds the `.exe` on a Windows runner.
-Tag a commit and the built files are published to Releases automatically:
+`.github/workflows/build-windows.yml` builds the `.exe` on a Windows runner —
+GitHub's machine, not yours, so **you don't need Node.js, or even Windows, to
+produce a Windows app.**
+
+From the website, no command line needed: **Releases → Draft a new release →**
+type `v1.0.0` in the tag box → **Create new tag on publish**, pick the branch you
+want built as the target, then **Publish release**. The build starts on its own
+and attaches the `.exe` to that release a few minutes later.
+
+Or from a terminal, if you have git:
 
 ```bash
 git tag v1.0.0
 git push origin v1.0.0
 ```
 
-A few minutes later, **Releases** has `DesktopPet-1.0.0.exe` attached as a direct
-download. Bump the number for each new release — a tag can only be used once.
+Either way **Releases** ends up with `DesktopPet-1.0.0.exe` as a direct download.
+Bump the number for each new release — a tag can only be used once.
 
 To build without publishing, use **Actions → Build Windows app → Run workflow**.
 The `.exe` files end up under that run's **Artifacts** instead (GitHub wraps

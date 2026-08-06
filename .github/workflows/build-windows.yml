@@ -56,6 +56,9 @@ jobs:
           path: dist/*.exe
           if-no-files-found: error
 
+      # Works whichever way the tag was made: pushed from a terminal (no release
+      # exists yet, so make one) or created by the Releases page on the website
+      # (the release is already there, so just attach the .exe to it).
       - name: Publish release
         if: startsWith(github.ref, 'refs/tags/')
         shell: pwsh
@@ -64,6 +67,16 @@ jobs:
         run: |
           $exes = Get-ChildItem -Path dist -Filter *.exe | ForEach-Object { $_.FullName }
           if (-not $exes) { throw "No .exe was built." }
-          gh release create $env:GITHUB_REF_NAME @exes `
-            --title "Desktop Pet $env:GITHUB_REF_NAME" `
-            --notes "Download an .exe below and run it. Node.js is not needed."
+
+          $tag = $env:GITHUB_REF_NAME
+          gh release view $tag *> $null
+          if ($LASTEXITCODE -eq 0) {
+            Write-Host "Release $tag already exists - attaching the .exe to it."
+            gh release upload $tag @exes --clobber
+          } else {
+            Write-Host "Creating release $tag."
+            gh release create $tag @exes `
+              --title "Desktop Pet $tag" `
+              --notes "Download the .exe below and run it. Node.js is not needed."
+          }
+          if ($LASTEXITCODE -ne 0) { throw "Publishing the release failed." }
