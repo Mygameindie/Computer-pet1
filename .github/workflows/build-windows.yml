@@ -72,30 +72,33 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $exes = Get-ChildItem -Path dist -Filter *.exe | ForEach-Object { $_.FullName }
-          if (-not $exes) { throw "No .exe was built." }
+          # @( ) matters: with one .exe this would otherwise be a plain string,
+          # and passing a string where a list is expected makes PowerShell
+          # enumerate its characters - gh then sees "D" (from D:\a\...) as an
+          # argument and fails with "no matches found".
+          $exes = @(Get-ChildItem -Path dist -Filter *.exe | ForEach-Object { $_.FullName })
+          if ($exes.Count -eq 0) { throw "No .exe was built." }
+          Write-Host "Built: $($exes -join ', ')"
 
           if ($env:GITHUB_REF -like 'refs/tags/*') {
-            $tag   = $env:GITHUB_REF_NAME
-            $title = "Desktop Pet $tag"
-            $flags = @()
+            $tag = $env:GITHUB_REF_NAME; $title = "Desktop Pet $tag"; $pre = $false
           } else {
-            $tag   = 'latest'
-            $title = 'Latest build'
-            $flags = @('--prerelease')
+            $tag = 'latest'; $title = 'Latest build'; $pre = $true
           }
 
-          $notes = "Download **DesktopPet-1.0.0.exe** below and double-click it. " +
+          $notes = "Download the .exe below and double-click it. " +
                    "Node.js is not needed, and it does not install anything."
 
           gh release view $tag *> $null
           if ($LASTEXITCODE -eq 0) {
             Write-Host "Release '$tag' exists - replacing its .exe."
-            gh release upload $tag @exes --clobber
+            gh release upload $tag $exes --clobber
           } else {
             Write-Host "Creating release '$tag'."
-            gh release create $tag @exes --target $env:GITHUB_SHA `
-              --title $title --notes $notes @flags
+            $ghArgs = @('release', 'create', $tag) + $exes +
+                      @('--target', $env:GITHUB_SHA, '--title', $title, '--notes', $notes)
+            if ($pre) { $ghArgs += '--prerelease' }
+            gh @ghArgs
           }
           if ($LASTEXITCODE -ne 0) { throw "Publishing the release failed." }
 
