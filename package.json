@@ -42,15 +42,10 @@
       "artifactName": "DesktopPet-${version}.exe"
     },
     "mac": {
+      "icon": "build/icon.png",
       "target": [
         {
           "target": "dmg",
-          "arch": [
-            "universal"
-          ]
-        },
-        {
-          "target": "zip",
           "arch": [
             "universal"
           ]
@@ -66,6 +61,9 @@
         "AppImage"
       ],
       "category": "Game"
+    },
+    "dmg": {
+      "artifactName": "DesktopPet-${version}.dmg"
     }
   }
 }

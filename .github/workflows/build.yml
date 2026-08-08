@@ -1,0 +1,132 @@
+# ===========================================================
+#  Build the app (Windows + macOS)
+# ===========================================================
+# Produces ready-to-run apps with Electron packaged inside, so anyone who just
+# wants the pet needs no Node.js and no npm install:
+#
+#   DesktopPet-<version>.exe   Windows - one file, double-click it
+#   DesktopPet-<version>.dmg   macOS   - open it, drag the app to Applications
+#
+# Neither is an installer on Windows: nothing in the Start Menu, nothing to
+# uninstall. On macOS a .app bundle in /Applications is the platform's own
+# convention - there is no single-file equivalent.
+#
+# Runs on a push to ANY branch. Each branch keeps its own rolling release named
+# after it (build-<branch>), so branches never overwrite each other's download.
+# Pushing a v* tag - or publishing a release from the website - makes a proper
+# versioned release instead.
+#
+# Both platforms are built in parallel and published together by one final job.
+# Publishing from a single job is deliberate: two jobs racing to create the same
+# release would both find it missing and both try to create it.
+# ===========================================================
+
+name: Build the app
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "**"
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      # One platform failing shouldn't throw away the other's build.
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            script: build:win
+          - os: macos-latest
+            script: build:mac
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm install
+
+      # --publish never: electron-builder will try to upload to a GitHub release
+      # by itself on a tag build. The publish job below does that, so this stops
+      # the two racing each other.
+      - name: Build
+        run: npm run ${{ matrix.script }} -- --publish never
+
+      # Each matrix job needs its own artifact name (upload-artifact v4 refuses
+      # to write the same one twice). Only one of these globs matches per OS;
+      # the step fails only if neither does.
+      - name: Upload the built app
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-${{ matrix.os }}
+          path: |
+            dist/*.exe
+            dist/*.dmg
+          if-no-files-found: error
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Collect both platforms' apps
+        uses: actions/download-artifact@v4
+        with:
+          pattern: app-*
+          merge-multiple: true
+          path: apps
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          shopt -s nullglob
+          files=(apps/*)
+          if [ ${#files[@]} -eq 0 ]; then echo "Nothing was built."; exit 1; fi
+          echo "Built: ${files[*]}"
+
+          if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+            # A version tag gets a permanent release of its own.
+            tag="$GITHUB_REF_NAME"
+            title="Desktop Pet $tag"
+            pre=""
+          else
+            # A branch gets one rolling release, replaced by each push to it.
+            # Slashes aren't legal in a tag name, hence the substitution.
+            tag="build-${GITHUB_REF_NAME//[^A-Za-z0-9._-]/-}"
+            title="Latest build ($GITHUB_REF_NAME)"
+            pre="--prerelease"
+          fi
+
+          notes=$'Download the file for your system and run it. Node.js is not needed.\n\n'
+          notes+=$'- **Windows** — `.exe`, double-click it. Nothing is installed.\n'
+          notes+=$'- **macOS** — `.dmg`, drag the app to Applications. It is unsigned, so the'
+          notes+=$' first launch needs right-click → Open; if macOS calls it damaged, run'
+          notes+=$' `xattr -cr "/Applications/Desktop Pet.app"` once.'
+
+          # The release may already exist: publishing from the website creates it
+          # before this runs, and a branch's rolling release is reused on purpose.
+          if gh release view "$tag" --repo "$REPO" >/dev/null 2>&1; then
+            echo "Release '$tag' exists - replacing its files."
+            gh release upload "$tag" "${files[@]}" --repo "$REPO" --clobber
+          else
+            echo "Creating release '$tag'."
+            gh release create "$tag" "${files[@]}" --repo "$REPO" \
+              --target "$GITHUB_SHA" --title "$title" --notes "$notes" $pre
+          fi
+
+          echo "Download: https://github.com/$REPO/releases/tag/$tag"

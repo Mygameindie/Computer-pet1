@@ -39,25 +39,43 @@ Built on Electron, so the same code runs on **Windows** and **macOS**.
 
 ## Running it
 
-### The easy way: download the app (Windows)
+### The easy way: download the app
 
 Go to **[Releases](https://github.com/Mygameindie/Computer-pet1/releases)** and
-download **`DesktopPet-<version>.exe`**. Double-click it and the pet appears.
-That's the whole procedure — no Node.js, no `npm install`, no ZIP to extract.
-Electron is packaged inside the `.exe`, which is why it's around 100 MB.
+take the file for your system. No Node.js, no `npm install`, nothing to extract
+— Electron is packaged inside, which is why each one is around 100 MB.
 
-**It does not install itself.** There's no setup wizard, no Start Menu entry,
-nothing added to your startup, and nothing to uninstall — it's one file you can
-keep on the Desktop, move to a USB stick, or delete when you're bored of it.
-
-Nor does it put a window on your screen: the pet is drawn on a transparent
-always-on-top overlay with no frame and no taskbar button, and clicks pass
-straight through it to whatever's underneath. All you see is the pet, plus a
-small tray icon by the clock — which is how you quit it (right-click the pet
-works too).
+**Windows — `DesktopPet-<version>.exe`.** Double-click it and the pet appears.
+It does not install itself: no setup wizard, no Start Menu entry, nothing added
+to your startup, nothing to uninstall. One file you can keep on the Desktop,
+move to a USB stick, or delete when you're bored of it.
 
 Windows will probably show a SmartScreen warning the first time, because the
 `.exe` isn't signed with a paid certificate — **More info → Run anyway**.
+
+**macOS — `DesktopPet-<version>.dmg`.** Open it and drag the app into
+Applications, then launch it from there. Universal, so it runs natively on both
+Apple Silicon and Intel. A `.app` is a bundle rather than a single file, so
+there's no one-file equivalent of the Windows version — this is the normal Mac
+convention.
+
+The app is unsigned, and macOS is stricter about that than Windows: the first
+launch needs **right-click → Open** rather than a double-click. If macOS insists
+the app "is damaged and can't be opened", that's the quarantine flag, not a
+corrupt download — clear it once with:
+
+```bash
+xattr -cr "/Applications/Desktop Pet.app"
+```
+
+Signing this away properly needs an Apple Developer account ($99/year).
+
+**On both**, the pet never puts a window on your screen: it's drawn on a
+transparent always-on-top overlay with no frame, and clicks pass straight
+through to whatever's underneath. There's no taskbar button on Windows and no
+Dock icon or ⌘-Tab entry on macOS. All you see is the pet, plus a small icon in
+the tray (Windows) or menu bar (macOS) — which is how you quit it, though
+right-clicking the pet works too.
 
 **No releases listed yet?** Then nobody has built one. See
 [Building the app](#building-the-app) below — it's one tag push.
@@ -210,39 +228,37 @@ takes the pet with it — that's what `start:bg` is for.
 
 ## Building the app
 
-### With GitHub Actions (no Windows machine needed)
+### With GitHub Actions (no Windows or Mac needed)
 
-`.github/workflows/build-windows.yml` builds the `.exe` on a Windows runner —
-GitHub's machine, not yours, so **you don't need Node.js, or even Windows, to
-produce a Windows app.**
+`.github/workflows/build.yml` builds both apps on GitHub's machines — a Windows
+runner and a macOS runner — so **you don't need Node.js, a PC, or a Mac to
+produce either app.**
 
-From the website, no command line needed: **Releases → Draft a new release →**
-type `v1.0.0` in the tag box → **Create new tag on publish**, pick the branch you
-want built as the target, then **Publish release**. The build starts on its own
-and attaches the `.exe` to that release a few minutes later.
+**Every push to any branch** builds both and publishes them to a rolling release
+named after that branch (`build-<branch>`). Branches get their own download and
+never overwrite each other's, so you can hand someone a link to exactly the
+version you're working on.
 
-Or from a terminal, if you have git:
+For a permanent numbered release, from the website: **Releases → Draft a new
+release →** type `v1.0.0` in the tag box → **Create new tag on publish**, pick
+the branch to build as the target, then **Publish release**. Or from a terminal:
 
 ```bash
 git tag v1.0.0
 git push origin v1.0.0
 ```
 
-Either way **Releases** ends up with `DesktopPet-1.0.0.exe` as a direct download.
-Bump the number for each new release — a tag can only be used once.
+Either way that release gets `DesktopPet-1.0.0.exe` and `DesktopPet-1.0.0.dmg`
+as direct downloads. Bump the number each time — a tag can only be used once.
 
-To build without publishing, use **Actions → Build Windows app → Run workflow**.
-The `.exe` files end up under that run's **Artifacts** instead (GitHub wraps
-artifacts in a ZIP, so a Release is the better link to hand to anyone else).
-
-> The workflow only appears in the Actions tab once it's on the default branch.
-> Pushing a tag works from any branch.
+> **Actions → Run workflow** only appears once this file is on the repository's
+> default branch. Pushing to a branch, or tagging, works from anywhere.
 
 ### On your own machine
 
 ```bash
 npm run build:win    # Windows: a single self-contained .exe (no installer)
-npm run build:mac    # macOS: universal (Intel + Apple Silicon) .dmg and .zip
+npm run build:mac    # macOS: universal (Intel + Apple Silicon) .dmg
 ```
 
 Output lands in `dist/`. Each platform's installer must be built on that
