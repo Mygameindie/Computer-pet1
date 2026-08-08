@@ -1,7 +1,7 @@
 {
   "name": "computer-pet1",
   "version": "1.0.0",
-  "description": "Single-pet desktop companion \u2014 drag it anywhere on screen, dress it up, and keep clicking straight through to your desktop.",
+  "description": "Single-pet desktop companion — drag it anywhere on screen, dress it up, and keep clicking straight through to your desktop.",
   "main": "main.js",
   "author": "Mygameindie",
   "license": "MIT",
@@ -47,12 +47,6 @@
           "arch": [
             "universal"
           ]
-        },
-        {
-          "target": "zip",
-          "arch": [
-            "universal"
-          ]
         }
       ],
       "category": "public.app-category.entertainment",
@@ -65,6 +59,9 @@
         "AppImage"
       ],
       "category": "Game"
+    },
+    "dmg": {
+      "artifactName": "DesktopPet-${version}.dmg"
     }
   }
 }
