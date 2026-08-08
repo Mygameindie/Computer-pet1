@@ -123,6 +123,9 @@ jobs:
           if gh release view "$tag" --repo "$REPO" >/dev/null 2>&1; then
             echo "Release '$tag' exists - replacing its files."
             gh release upload "$tag" "${files[@]}" --repo "$REPO" --clobber
+            # upload leaves the description alone, so an older release would go
+            # on describing whatever it shipped the first time.
+            gh release edit "$tag" --repo "$REPO" --title "$title" --notes "$notes"
           else
             echo "Creating release '$tag'."
             gh release create "$tag" "${files[@]}" --repo "$REPO" \
