@@ -44,6 +44,7 @@ window.OUTFIT_CONFIG = {
     { key: "bottom",            label: "Pants / Skirt",             z: 110 },
     { key: "dress",             label: "Dress",                     z: 130 },
     { key: "bodysuit",          label: "Bodysuit",                  z: 128 },
+    { key: "jacket",            label: "Jacket",                    z: 135 },
     { key: "shoes",             label: "Shoes",                     z: 90  },
     { key: "glove",             label: "Glove",                     z: 140 },
     { key: "bunnysuitbow",      label: "Bunnysuit Bow",             z: 150 },
@@ -63,6 +64,7 @@ window.OUTFIT_CONFIG = {
     bottom:            ["pants1", "skirt1"],
     dress:             ["dress1"],
     bodysuit:          ["bodysuit1"],
+    jacket:            ["jacket1"],
     shoes:             ["shoes1"],
     glove:             ["glove1"],
     bunnysuitbow:      ["bunnysuitbow1"],
@@ -73,10 +75,7 @@ window.OUTFIT_CONFIG = {
 
   // What the pet is wearing on a fresh start. Anything left out starts as None.
   defaults: {
-    onepieceUnderwear: "onepieceunderwear1",
-    glove: "glove1",
-    shoes: "shoes1",
-    ears: "ears1",
-    bunnysuitbow: "bunnysuitbow1",
+    top: "top1",
+    jacket: "jacket1",
   },
 };
