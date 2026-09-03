@@ -34,35 +34,6 @@ window.OUTFIT_PRESETS = [
     clothes: { top: "top1", jacket: "jacket1" },
   },
   {
-    name: "Casual",
-    emoji: "👕",
-    clothes: { top: "top1", bottom: "pants1", shoes: "shoes1" },
-    colors:  { bottom: "Blue" },
-  },
-  {
-    name: "Skirt Day",
-    emoji: "🌸",
-    clothes: { top: "top1", bottom: "skirt1", shoes: "shoes1", hat: "hat1" },
-    colors:  { top: "Pink", bottom: "Purple" },
-  },
-  {
-    name: "Party Dress",
-    emoji: "🎀",
-    clothes: { dress: "dress1", shoes: "shoes1", hat: "hat1" },
-    colors:  { dress: "Red", hat: "Yellow" },
-  },
-  {
-    name: "Comfy",
-    emoji: "🩲",
-    clothes: { topUnderwear: "topunderwear1", bottomUnderwear: "bottomunderwear1" },
-  },
-  {
-    name: "Swimsuit",
-    emoji: "🩱",
-    clothes: { onepieceUnderwear: "onepieceunderwear1" },
-    colors:  { onepieceUnderwear: "Cyan" },
-  },
-  {
     name: "Birthday Suit",
     emoji: "🚫",
     clothes: {}, // take everything off
