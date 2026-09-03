@@ -9,7 +9,8 @@
 //    1. Add an object to window.OUTFIT_PRESETS.
 //    2. `clothes` maps a category -> the item id from outfit_config.js.
 //       Categories: topUnderwear, bottomUnderwear, onepieceUnderwear,
-//                   top, bottom, dress, shoes, hat.
+//                   top, bottom, dress, bodysuit, jacket, shoes, glove,
+//                   bunnysuitbow, glasses, ears, hat.
 //       Any category you leave out is treated as "None" (taken off).
 //    3. `colors` is OPTIONAL. Map a category -> a color name:
 //       Original, Red, Orange, Yellow, Green, Cyan, Blue, Purple, Pink.
@@ -17,7 +18,7 @@
 //
 //  Example:
 //    { name: "Cool", emoji: "😎",
-//      clothes: { top: "top1", bottom: "pants1", shoes: "shoes1" },
+//      clothes: { top: "top1", jacket: "jacket1", bottom: "pants1", shoes: "shoes1" },
 //      colors:  { top: "Blue", bottom: "Green" } }
 //
 //  There is only ONE pet in this build, so a preset is a single look — no
@@ -27,6 +28,11 @@
 // ===========================================================
 
 window.OUTFIT_PRESETS = [
+  {
+    name: "Top + Jacket",
+    emoji: "🧥",
+    clothes: { top: "top1", jacket: "jacket1" },
+  },
   {
     name: "Casual",
     emoji: "👕",
