@@ -153,7 +153,14 @@
         const it = normItem(entry);
         // `hangs`: hangs from the hips (skirt, dress) instead of being split
         // between the legs. Set per item, or for a whole category.
-        if (it) catalog[c.key].items[it.id] = { id: it.id, label: it.label, img: img(`${it.prefix}.png`), hangs: it.hangs === undefined ? c.hangs : !!it.hangs };
+        // Optional extra layers of the same garment, both carried by the body:
+        // <name>_over.png is drawn over the chest (bra straps that shouldn't
+        // bounce with it), <name>_under.png under it.
+        if (it) catalog[c.key].items[it.id] = {
+          id: it.id, label: it.label, img: img(`${it.prefix}.png`),
+          over: img(`${it.prefix}_over.png`), under: img(`${it.prefix}_under.png`),
+          hangs: it.hangs === undefined ? c.hangs : !!it.hangs,
+        };
       });
     });
     return catalog;
@@ -538,7 +545,8 @@
   };
 
   // `only` (optional): draw just the items it returns true for.
-  window.drawOutfitOverlay = function (ctx, state, x, y, w, h, only) {
+  // `layer` (optional): 'over' or 'under' draws those extra layers instead.
+  window.drawOutfitOverlay = function (ctx, state, x, y, w, h, only, layer) {
     const catalog = window.dressUpCatalog || {};
     let drew = false;
     catKeys().slice().sort((a, b) => (catalog[a].z || 0) - (catalog[b].z || 0)).forEach(k => {
@@ -547,8 +555,10 @@
       const it = catalog[k] && catalog[k].items && catalog[k].items[id];
       if (!it || !it.img || it.img._failed) return;
       if (only && !only(it)) return;
+      const src = layer ? it[layer] : it.img;
+      if (!src || src._failed) return;
       const hex = COLORS[(window.clothingColors && window.clothingColors[k]) || DEFAULT_COLOR] || null;
-      const drawImg = hex ? tintedImage(it.img, hex) : it.img;
+      const drawImg = hex ? tintedImage(src, hex) : src;
       if (safeDraw(ctx, drawImg, x, y, w, h)) drew = true;
     });
     return drew;
