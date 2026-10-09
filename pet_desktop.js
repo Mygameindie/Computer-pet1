@@ -145,10 +145,20 @@
 
   // ---- Drawing ------------------------------------------------------------
   let redrawQueued = false;
+  // On the next animation frame, or after a short timer if no frame comes
+  // (see FRAME_BACKSTOP_MS below).
   function requestRedraw() {
     if (redrawQueued) return;
     redrawQueued = true;
-    requestAnimationFrame(() => { redrawQueued = false; draw(); });
+    let raf = 0, timer = 0;
+    const run = () => {
+      cancelAnimationFrame(raf); clearTimeout(timer);
+      if (!redrawQueued) return;
+      redrawQueued = false;
+      draw();
+    };
+    raf = requestAnimationFrame(run);
+    timer = setTimeout(run, 50);
   }
 
   // The static sprite: base art plus clothes, drawn into any 2D context at
@@ -291,16 +301,33 @@
     pet.body.draw(pet.ctx, pet.ox, pet.oy, window.devicePixelRatio || 1);
   }
 
+  // The simulation is driven by animation frames, with a timer as a backstop:
+  // Windows can decide a transparent overlay is hidden and stop sending it
+  // frames, which froze the pet halfway through getting up (arms still raised).
+  const FRAME_BACKSTOP_MS = 50;
   let ragdollRaf = 0;
+  let ragdollTimer = 0;
   let ragdollLast = 0;
   function wakeRagdoll() {
-    if (ragdollRaf) return;
+    if (ragdollRaf || ragdollTimer) return;
     ragdollLast = performance.now();
-    ragdollRaf = requestAnimationFrame(ragdollFrame);
+    scheduleRagdoll();
+  }
+
+  function scheduleRagdoll() {
+    ragdollRaf = requestAnimationFrame(runRagdollFrame);
+    ragdollTimer = setTimeout(runRagdollFrame, FRAME_BACKSTOP_MS);
+  }
+
+  function runRagdollFrame() {
+    if (ragdollRaf) cancelAnimationFrame(ragdollRaf);
+    if (ragdollTimer) clearTimeout(ragdollTimer);
+    ragdollRaf = 0;
+    ragdollTimer = 0;
+    ragdollFrame(performance.now());
   }
 
   function ragdollFrame(now) {
-    ragdollRaf = 0;
     const dt = Math.min((now - ragdollLast) / 1000, 0.1);
     ragdollLast = now;
     const s = shared.pet;
@@ -313,7 +340,7 @@
     const active = pet.body.tick(dt);
     // Draw while moving, and once more on the frame it comes to rest.
     if (active || !wasSettled || pet.needsDraw) { drawBody(); pet.needsDraw = false; }
-    if (active) { pet.needsDraw = true; ragdollRaf = requestAnimationFrame(ragdollFrame); }
+    if (active) { pet.needsDraw = true; scheduleRagdoll(); }
   }
 
   // Re-draw whenever a clothing image finishes loading.
