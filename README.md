@@ -255,6 +255,8 @@ exists; without a full set it keeps its normal sprite.
 | `back_hair.png` | no | hangs behind the head and sways |
 | `back_wings.png`, `back_tail.png` | no | follow the body |
 
+The back items are layered tail at the very back, then wings, then hair (right behind the head).
+
 `L` is the left side **of the picture**. Joint positions, turn limits and which
 part of the canvas belongs to which part (for clothes) are in `ragdoll_config.js`.
 
