@@ -90,6 +90,5 @@ window.OUTFIT_CONFIG = {
   },
 
   // What the pet is wearing on a fresh start. Anything left out starts as None.
-  // (Nothing is drawn for him yet; add items here once their PNGs exist.)
-  defaults: {},
+  defaults: { bottomUnderwear: "boxers1", top: "top1", bottom: "pants1", shoes: "shoes1" },
 };
