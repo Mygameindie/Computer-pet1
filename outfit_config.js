@@ -30,6 +30,10 @@
 //  or one item: { id: "skirt2", hangs: true }) and it hangs from the hips in
 //  one piece while the legs swing underneath.
 //
+//  STIFF: a garment that is one solid piece over the chest (a sports bra)
+//  would tear where the bouncing chest meets the body. Mark it
+//  { id: "topunderwear2", stiff: true } and it stays whole on the body.
+//
 //  This is a plain JS file (no network/JSON loading) so it can't glitch or
 //  fail to load mid-run — it's the smoothest, simplest setup.
 // ===========================================================
@@ -62,7 +66,7 @@ window.OUTFIT_CONFIG = {
   // THE WARDROBE — every garment the one pet can wear.
   // -------------------------------------------------------------------------
   pet: {
-    topUnderwear:      ["topunderwear1", "topunderwear2", "topunderwear3", "topunderwear4"],
+    topUnderwear:      ["topunderwear1", { id: "topunderwear2", stiff: true }, "topunderwear3", "topunderwear4"],
     bottomUnderwear:   [{ id: "bottomunderwear1", hangs: true }, "bottomunderwear2", "bottomunderwear3", "bottomunderwear4"],
     onepieceUnderwear: ["onepieceunderwear1"],
     top:               ["top1"],

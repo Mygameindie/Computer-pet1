@@ -118,6 +118,7 @@
       label: entry.label || humanize(id),
       prefix: String(entry.prefix || id),
       hangs: entry.hangs,
+      stiff: entry.stiff,
     };
   }
 
@@ -160,6 +161,9 @@
           id: it.id, label: it.label, img: img(`${it.prefix}.png`),
           over: img(`${it.prefix}_over.png`), under: img(`${it.prefix}_under.png`),
           hangs: it.hangs === undefined ? c.hangs : !!it.hangs,
+          // `stiff`: one solid piece (a sports bra) that would tear if cut up
+          // along the body: kept whole on the body, over the chest.
+          stiff: !!it.stiff,
         };
       });
     });
