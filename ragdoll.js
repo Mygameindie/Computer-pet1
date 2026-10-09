@@ -918,6 +918,11 @@
     // the arm has gone. `which` is 'armpits' (drawn over the body, under the
     // chest) or 'shoulders' (drawn over everything, see draw()).
     drawShoulders(ctx, originX, originY, th, placed, which) {
+      // These lines and the skin in the armpit are drawn for the bare body. A
+      // garment over the torso has its own outline and cut, and they would
+      // show on top of it as stray black strokes and grey wedges.
+      const worn = (typeof window !== 'undefined' && window.selectedClothes) || {};
+      if (['top', 'topUnderwear', 'bodysuit', 'dress', 'onepieceUnderwear'].some(c => worn[c])) return;
       const N = CFG.particles.N, n = this.p.N, k = this.k;
       const onBody = q => {
         const dx = (q[0] - N.x) * k, dy = (q[1] - N.y) * k;

@@ -94,10 +94,10 @@
     { id: 'back_hair',  file: 'back_hair',  optional: true, pivot: 'N', child: 'Hr' },
     { id: 'leg_L', file: 'leg_L', pivot: 'HipL', child: 'FL', region: { t: 'rect', x0: 0,   y0: 868, x1: 426, y1: SRC_H } },
     { id: 'leg_R', file: 'leg_R', pivot: 'HipR', child: 'FR', region: { t: 'rect', x0: 426, y0: 868, x1: SRC_W, y1: SRC_H } },
-    { id: 'arm_L', file: 'arm_L', lift: 1,  pivot: 'SL', child: 'HL', region: { t: 'rect', x0: 0,   y0: 606, x1: 370,   y1: 846 } },
-    { id: 'arm_R', file: 'arm_R', lift: -1, pivot: 'SR', child: 'HR', region: { t: 'rect', x0: 483, y0: 606, x1: SRC_W, y1: 846 } },
+    { id: 'arm_L', file: 'arm_L', lift: 1,  pivot: 'SL', child: 'HL', region: { t: 'rect', x0: 0,   y0: 582, x1: 344,   y1: 846 } },
+    { id: 'arm_R', file: 'arm_R', lift: -1, pivot: 'SR', child: 'HR', region: { t: 'rect', x0: 507, y0: 582, x1: SRC_W, y1: 846 } },
     { id: 'body',  file: 'body',  pivot: 'N', child: 'P', rest: true },
-    { id: 'head',  file: 'head',  pivot: 'N', child: 'Hd', region: { t: 'rect', x0: 0, y0: 0, x1: SRC_W, y1: 606 } },
+    { id: 'head',  file: 'head',  pivot: 'N', child: 'Hd', region: { t: 'rect', x0: 0, y0: 0, x1: SRC_W, y1: 582 } },
   ];
 
   // The shoulder line: from the base of the neck (on the body) over the top of the
