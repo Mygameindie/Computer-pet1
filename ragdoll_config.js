@@ -35,8 +35,8 @@
     SR:   { x: 462, y: 634,  r: 25,  k: 0.50, m: 1.5, wake: 0.30 },
     HipL: { x: 398, y: 866,  r: 25,  k: 0.55, m: 2.0, wake: 0.12 },    // hips
     HipR: { x: 454, y: 866,  r: 25,  k: 0.55, m: 2.0, wake: 0.12 },
-    HL:   { x: 186, y: 752,  r: 55,  k: 0.16, m: 0.6, wake: 0.55 },    // hands (the round fists)
-    HR:   { x: 666, y: 752,  r: 55,  k: 0.16, m: 0.6, wake: 0.55 },
+    HL:   { x: 186, y: 752,  r: 40,  k: 0.16, m: 0.6, wake: 0.55 },    // hands
+    HR:   { x: 666, y: 752,  r: 40,  k: 0.16, m: 0.6, wake: 0.55 },
     FL:   { x: 378, y: 1035, r: SOLE_Y - 1035, k: 0.65, m: 1.0, wake: 0 },   // feet
     FR:   { x: 474, y: 1035, r: SOLE_Y - 1035, k: 0.65, m: 1.0, wake: 0 },
   };
@@ -99,8 +99,8 @@
     { id: 'back_tail',  file: 'back_tail',  optional: true, pivot: 'P', child: 'Tt' },
     { id: 'leg_L', file: 'leg_L', pivot: 'HipL', child: 'FL', region: { t: 'rect', x0: 0,   y0: 868, x1: 426, y1: SRC_H } },
     { id: 'leg_R', file: 'leg_R', pivot: 'HipR', child: 'FR', region: { t: 'rect', x0: 426, y0: 868, x1: SRC_W, y1: SRC_H } },
-    { id: 'arm_L', file: 'arm_L', lift: 1,  pivot: 'SL', child: 'HL', region: { t: 'rect', x0: 0,   y0: 606, x1: 370,   y1: 690 } },
-    { id: 'arm_R', file: 'arm_R', lift: -1, pivot: 'SR', child: 'HR', region: { t: 'rect', x0: 483, y0: 606, x1: SRC_W, y1: 690 } },
+    { id: 'arm_L', file: 'arm_L', lift: 1,  pivot: 'SL', child: 'HL', region: { t: 'rect', x0: 0,   y0: 606, x1: 370,   y1: 846 } },
+    { id: 'arm_R', file: 'arm_R', lift: -1, pivot: 'SR', child: 'HR', region: { t: 'rect', x0: 483, y0: 606, x1: SRC_W, y1: 846 } },
     { id: 'body',  file: 'body',  pivot: 'N', child: 'P', rest: true },
     { id: 'head',  file: 'head',  pivot: 'N', child: 'Hd', region: { t: 'rect', x0: 0, y0: 0, x1: SRC_W, y1: 606 } },
   ];
