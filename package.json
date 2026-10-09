@@ -1,5 +1,5 @@
 {
-  "name": "computer-pet1",
+  "name": "computer-pet1-boy",
   "version": "1.0.0",
   "description": "Single-pet desktop companion — drag it anywhere on screen, dress it up, and keep clicking straight through to your desktop.",
   "main": "main.js",
@@ -18,8 +18,8 @@
     "electron-builder": "^25.0.0"
   },
   "build": {
-    "appId": "com.mygameindie.computerpet1",
-    "productName": "Desktop Pet Single",
+    "appId": "com.mygameindie.computerpet1boy",
+    "productName": "Desktop Pet Boy",
     "files": [
       "main.js",
       "preload.js",
@@ -40,7 +40,7 @@
       ]
     },
     "portable": {
-      "artifactName": "DesktopPet-${version}.exe"
+      "artifactName": "DesktopPetBoy-${version}.exe"
     },
     "mac": {
       "target": [
@@ -63,7 +63,7 @@
       "category": "Game"
     },
     "dmg": {
-      "artifactName": "DesktopPet-${version}.dmg"
+      "artifactName": "DesktopPetBoy-${version}.dmg"
     }
   }
 }

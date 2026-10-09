@@ -1,5 +1,12 @@
 # Desktop Pet — Single
 
+> **Boy branch.** This is the same desktop pet, but the pet is the boy
+> (`images/base.png`). He has no ragdoll body parts yet, so he moves as one
+> whole picture. Draw his parts with the same names as the girl's
+> (`images/parts/head.png`, `body.png`, `arm_L.png` ...) and he becomes a
+> ragdoll. Boy clothes: no top underwear, one-piece, dress or skirt; his
+> wardrobe is in `outfit_config.js`.
+
 A companion pet that lives on your desktop. Drag it anywhere on screen, dress it
 up, and keep using your computer normally — clicks pass straight through to
 whatever is behind it.

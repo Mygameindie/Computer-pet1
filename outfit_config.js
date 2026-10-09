@@ -13,6 +13,9 @@
 //    Want a custom name? Use an object instead of a string:
 //        { id: "top2", label: "Cool Hoodie" }
 //
+//  BOY BRANCH: this pet is the boy. Boy clothing rules: no top underwear, no
+//  one-piece underwear, no dress, no skirt (those tabs are left out).
+//
 //  THIS BUILD HAS ONE PET. There is no second character and no "_2" artwork:
 //  everything listed below dresses the one pet. An item whose PNG doesn't
 //  exist in images/ is hidden automatically, and a category with nothing left
@@ -73,12 +76,9 @@ window.OUTFIT_CONFIG = {
   // THE WARDROBE — every garment the one pet can wear.
   // -------------------------------------------------------------------------
   pet: {
-    topUnderwear:      ["topunderwear1", "topunderwear2", "topunderwear3", "topunderwear4"],
-    bottomUnderwear:   [{ id: "bottomunderwear1", hangs: true }, "bottomunderwear2", "bottomunderwear3", "bottomunderwear4"],
-    onepieceUnderwear: ["onepieceunderwear1"],
-    top:               [{ id: "top1", stiff: true }],
-    bottom:            ["pants1", { id: "skirt1", blows: true }],
-    dress:             ["dress1"],
+    bottomUnderwear:   ["bottomunderwear1", "boxers1"],
+    top:               ["top1"],
+    bottom:            ["pants1"],
     bodysuit:          ["bodysuit1"],
     socks:             ["socks1"],
     shoes:             ["shoes1"],
@@ -90,12 +90,6 @@ window.OUTFIT_CONFIG = {
   },
 
   // What the pet is wearing on a fresh start. Anything left out starts as None.
-  defaults: {
-    top: "top1",
-    topUnderwear: "topunderwear1",
-    bottomUnderwear: "bottomunderwear1",
-    bottom: "skirt1",
-    socks: "socks1",
-    shoes: "shoes1",
-  },
+  // (Nothing is drawn for him yet; add items here once their PNGs exist.)
+  defaults: {},
 };
