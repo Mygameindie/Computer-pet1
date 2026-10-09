@@ -57,6 +57,9 @@ let droppedIn = false;   // has the pet made its entrance yet?
 const state = {
   pet: { x: 0, y: 0, vx: 0, vy: 0, w: 220, h: 250, visible: true, dragging: false, landedAt: 0, impact: 0 },
   gravity: true,
+  // Ragdoll: the pet's body is simulated (limp when grabbed or thrown, stands
+  // itself back up). Off = the old rigid sprite.
+  ragdoll: true,
   // Filled in by the renderer once the outfit system has built its defaults.
   // outfitRev is bumped on every change so a renderer can tell "the wardrobe
   // changed" from "this is just another physics frame" without diffing.
@@ -159,6 +162,11 @@ function setGravity(on) {
   broadcast();
 }
 
+function setRagdoll(on) {
+  state.ragdoll = !!on;
+  broadcast();
+}
+
 // Exponential damping that doesn't change character with the frame rate.
 function damp(v, rate, dt) {
   return v * Math.exp(-rate * dt);
@@ -224,6 +232,9 @@ function stepPhysics() {
 }
 
 function broadcast() {
+  // The renderers simulate the ragdoll's limbs against the floor, and the floor
+  // depends on which display's work area the pet is standing on.
+  state.pet.floorY = groundY(state.pet) + state.pet.h;
   for (const win of windows.values()) {
     if (!win.isDestroyed()) win.webContents.send('state', state);
   }
@@ -360,6 +371,12 @@ function buildTrayMenu() {
       type: 'checkbox',
       checked: state.gravity,
       click: () => { setGravity(!state.gravity); if (tray) tray.setContextMenu(buildTrayMenu()); },
+    },
+    {
+      label: 'Ragdoll',
+      type: 'checkbox',
+      checked: state.ragdoll,
+      click: () => { setRagdoll(!state.ragdoll); if (tray) tray.setContextMenu(buildTrayMenu()); },
     },
     { label: 'Reset Position', click: resetPosition },
     { type: 'separator' },
@@ -520,6 +537,12 @@ ipcMain.on('pet-context-menu', (event) => {
       type: 'checkbox',
       checked: state.gravity,
       click: () => { setGravity(!state.gravity); if (tray) tray.setContextMenu(buildTrayMenu()); },
+    },
+    {
+      label: 'Ragdoll',
+      type: 'checkbox',
+      checked: state.ragdoll,
+      click: () => { setRagdoll(!state.ragdoll); if (tray) tray.setContextMenu(buildTrayMenu()); },
     },
     { label: 'Reset Position', click: resetPosition },
     { label: 'Hide Pet', click: () => {

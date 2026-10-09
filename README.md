@@ -22,6 +22,12 @@ Built on Electron, so the same code runs on **Windows** and **macOS**.
   than behind it. Flick it and it keeps the momentum of the throw, bounces off
   the sides of the desktop and slides to a stop. Turn it off from the tray or the
   pet's right-click menu if you'd rather park the pet in mid-air.
+- **Ragdoll.** The pet is a skeleton, not a flat picture. It stands on its own,
+  but pick it up by a hand and it hangs by that hand; by a foot and it hangs
+  upside down. Throw it and it tumbles limp, then pulls itself back onto its
+  feet after it lands. Clothes are sliced up with the body, so every outfit
+  follows. Turn it off from the tray or right-click menu (**Ragdoll**) for the
+  rigid sprite.
 - **Doesn't block anything.** The window is click-through everywhere except the
   pet itself. Desktop shortcuts, links, buttons and browser windows underneath
   stay fully clickable, even directly around the pet — hit-testing is done per
@@ -233,6 +239,25 @@ all. That's why the wardrobe currently looks sparse: this repo only ships
 **Outfit presets** live in `outfit_presets.js` — one `clothes` map per look, no
 per-character variants to keep in sync.
 
+## Ragdoll art
+
+The pet is drawn from separate part files in `images/parts/`, all 851 × 1134,
+transparent, in the standing pose. It becomes a ragdoll when every required part
+exists; without a full set it keeps its normal sprite.
+
+| File | Needed | Notes |
+|---|---|---|
+| `head.png` | yes | head, face, front hair; turns about the neck |
+| `body.png` | yes | torso: fill and lines together; covers the tops of the arms and legs |
+| `arm_L.png`, `arm_R.png` | yes | whole arm with the hand; swings at the shoulder |
+| `leg_L.png`, `leg_R.png` | yes | whole leg with the foot; swings at the hip |
+| `chest_L.png`, `chest_R.png` | no | bounce on springs; they carry their own fill |
+| `back_hair.png` | no | hangs behind the head and sways |
+| `back_wings.png`, `back_tail.png` | no | follow the body |
+
+`L` is the left side **of the picture**. Joint positions, turn limits and which
+part of the canvas belongs to which part (for clothes) are in `ragdoll_config.js`.
+
 ---
 
 ## How it works
@@ -242,6 +267,8 @@ per-character variants to keep in sync.
 | `main.js` | Electron main process: one transparent always-on-top overlay per display, the pet's shared state in global screen coordinates, the gravity simulation, tray, click-through toggling |
 | `preload.js` | The only bridge between page and main (`contextIsolation` on, `nodeIntegration` off) |
 | `pet_desktop.js` | The overlay scene: draws the pet, alpha hit-testing, dragging and throwing, which screen shows the wardrobe bar, state sync |
+| `ragdoll_config.js` | The skeleton: joint positions, bone limits and how the sprite is cut into parts |
+| `ragdoll.js` | The ragdoll itself: a small physics sim plus the code that slices the sprite (body + clothes) into parts and draws them |
 | `outfit_system.js` | Dress Up panel, layering, colour tinting, clothing rules — one wardrobe, no character switcher |
 | `outfit_presets.js` | Preset outfits and the 🎀 Outfits panel |
 | `outfit_config.js` | The wardrobe — the one file to edit when adding clothes |
