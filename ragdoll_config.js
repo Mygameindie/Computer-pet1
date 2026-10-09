@@ -11,7 +11,7 @@
 // The pet is drawn from separate part files (see `parts` below). A character
 // uses them if all the REQUIRED ones exist, with `_2` added for character 2
 // (head_2.png ...); a character without a full set just keeps its normal
-// sprite. Optional parts (back hair, chest, wings, tail) are used when present.
+// sprite. Optional parts (back hair, chest) are used when present.
 // ===========================================================
 
 (function (root) {
@@ -20,7 +20,7 @@
   // The legs are drawn this many source px lower than in the part files (the whole
   // leg, hips included, so it still turns about the same spot on the leg).
   const LEG_DROP = 0;
-  const SOLE_Y = 1057 + LEG_DROP;   // lowest pixel of the feet in the standing pose
+  const SOLE_Y = 1085 + LEG_DROP;   // lowest pixel of the feet in the standing pose
 
   // Joints. r = distance from the joint to the floor when lying on it,
   // k = how hard the joint is pulled back to the standing pose (0..1),
@@ -28,17 +28,17 @@
   // way round), wake = when it joins in while getting up (0 first .. 1 last):
   // feet plant first, then the hips push up, the chest, the head, the arms last.
   const particles = {
-    N:    { x: 426, y: 608,  r: 30,  k: 0.50, m: 2.5, wake: 0.30 },    // neck
-    P:    { x: 426, y: 858,  r: 40,  k: 0.55, m: 3.0, wake: 0.12 },    // pelvis
-    Hd:   { x: 426, y: 505,  r: 105, k: 0.30, m: 2.0, wake: 0.45 },    // head centre
-    SL:   { x: 390, y: 634,  r: 25,  k: 0.50, m: 1.5, wake: 0.30 },    // shoulders (where the arm meets the body, not at the neck)
-    SR:   { x: 462, y: 634,  r: 25,  k: 0.50, m: 1.5, wake: 0.30 },
-    HipL: { x: 398, y: 866,  r: 25,  k: 0.55, m: 2.0, wake: 0.12 },    // hips
-    HipR: { x: 454, y: 866,  r: 25,  k: 0.55, m: 2.0, wake: 0.12 },
-    HL:   { x: 186, y: 752,  r: 40,  k: 0.16, m: 0.6, wake: 0.55 },    // hands
-    HR:   { x: 666, y: 752,  r: 40,  k: 0.16, m: 0.6, wake: 0.55 },
-    FL:   { x: 378, y: 1035, r: SOLE_Y - 1035, k: 0.65, m: 1.0, wake: 0 },   // feet
-    FR:   { x: 474, y: 1035, r: SOLE_Y - 1035, k: 0.65, m: 1.0, wake: 0 },
+    N:    { x: 426, y: 610,  r: 30,  k: 0.50, m: 2.5, wake: 0.30 },    // neck
+    P:    { x: 426, y: 860,  r: 40,  k: 0.55, m: 3.0, wake: 0.12 },    // pelvis
+    Hd:   { x: 436, y: 480,  r: 105, k: 0.30, m: 2.0, wake: 0.45 },    // head centre
+    SL:   { x: 376, y: 628,  r: 25,  k: 0.50, m: 1.5, wake: 0.30 },    // shoulders (where the arm meets the body, not at the neck)
+    SR:   { x: 475, y: 628,  r: 25,  k: 0.50, m: 1.5, wake: 0.30 },
+    HipL: { x: 396, y: 862,  r: 25,  k: 0.55, m: 2.0, wake: 0.12 },    // hips
+    HipR: { x: 456, y: 862,  r: 25,  k: 0.55, m: 2.0, wake: 0.12 },
+    HL:   { x: 176, y: 752,  r: 40,  k: 0.16, m: 0.6, wake: 0.55 },    // hands
+    HR:   { x: 675, y: 752,  r: 40,  k: 0.16, m: 0.6, wake: 0.55 },
+    FL:   { x: 392, y: 1063, r: SOLE_Y - 1063, k: 0.65, m: 1.0, wake: 0 },   // feet
+    FR:   { x: 460, y: 1063, r: SOLE_Y - 1063, k: 0.65, m: 1.0, wake: 0 },
   };
 
   // Soft joints: not part of the skeleton but pulled toward a spot on it, so
@@ -50,7 +50,6 @@
     CL: { x: 381, y: 676, r: 15, m: 0.4, k: 0.12, anchor: 'torso', max: 26, maxX: 7, gravity: 0.35 },    // chest
     CR: { x: 469, y: 676, r: 15, m: 0.4, k: 0.12, anchor: 'torso', max: 26, maxX: 7, gravity: 0.35 },
     Hr: { x: 425, y: 950, r: 20, m: 0.8, k: 0.09, anchor: 'head',  max: 400 },   // end of the back hair
-    Tt: { x: 304, y: 900,  r: 8, m: 0.5, k: 0.07, anchor: 'torso', max: 400 },  // tip of the tail
   };
 
   // Bones that never change length. The torso entries make the neck, shoulders,
@@ -61,7 +60,6 @@
     ['N', 'Hd'],
     ['SL', 'HL'], ['SR', 'HR'], ['HipL', 'FL'], ['HipR', 'FR'],
     ['N', 'Hr'],
-    ['P', 'Tt'],
   ];
 
   // How far a limb may turn from its standing angle, in degrees, relative to
@@ -77,7 +75,6 @@
     { pivot: 'HipR', tip: 'FR', lo: -50, hi: 12, frame: 'torso' },
     { pivot: 'N',    tip: 'Hd', lo: -30, hi: 30, heldLo: -30, heldHi: 30, frame: 'torso' },
     { pivot: 'N',    tip: 'Hr', lo: -35, hi: 35, frame: 'head' },
-    { pivot: 'P',    tip: 'Tt', lo: -50, hi: 50, frame: 'torso' },
   ];
 
   // Parts, back to front. `file` is images/parts/<file>.png. `pivot` is the joint
@@ -93,10 +90,8 @@
   // hide the end of the arm or leg. Staying behind they'd be left as outline-less
   // blobs when the limb swings away; carried, they stay joined to it.
   const parts = [
-    // Back items, furthest back first: hair, then wings, then tail.
+    // Back items, furthest back first: hair.
     { id: 'back_hair',  file: 'back_hair',  optional: true, pivot: 'N', child: 'Hr' },
-    { id: 'back_wings', file: 'back_wings', optional: true, pivot: 'N', child: 'P' },
-    { id: 'back_tail',  file: 'back_tail',  optional: true, pivot: 'P', child: 'Tt' },
     { id: 'leg_L', file: 'leg_L', pivot: 'HipL', child: 'FL', region: { t: 'rect', x0: 0,   y0: 868, x1: 426, y1: SRC_H } },
     { id: 'leg_R', file: 'leg_R', pivot: 'HipR', child: 'FR', region: { t: 'rect', x0: 426, y0: 868, x1: SRC_W, y1: SRC_H } },
     { id: 'arm_L', file: 'arm_L', lift: 1,  pivot: 'SL', child: 'HL', region: { t: 'rect', x0: 0,   y0: 606, x1: 370,   y1: 846 } },
@@ -121,8 +116,8 @@
   ];
 
   const shoulderLines = [
-    { part: 'arm_L', neck: [408, 608], ctrl: [366, 608], arm: [332, 626], w: 8.5 },
-    { part: 'arm_R', neck: [444, 608], ctrl: [486, 608], arm: [520, 626], w: 8.5 },
+    { part: 'arm_L', neck: [408, 608], ctrl: [370, 606], arm: [340, 626], w: 8.5 },
+    { part: 'arm_R', neck: [443, 608], ctrl: [481, 606], arm: [511, 626], w: 8.5 },
   ];
 
   // A raised arm lifts its shoulder: the whole arm (with the shoulder lump it
@@ -132,10 +127,10 @@
   const shoulderLift = { up: 16, in: 5, from: 10, full: 90 };
 
   // Colour of the outline in the art (the shoulder and armpit lines are drawn in it).
-  const outline = '#741b03';
+  const outline = '#000000';
   // Skin colour, for the skin drawn between a raised arm and the body (left out:
   // taken from the body picture's most common light colour).
-  const skin = '#fe5013';
+  const skin = '#b3a9bf';
 
   const config = { outline, skin, shoulderLift, SRC_W, SRC_H, SOLE_Y, particles, soft, rigid, limits, shoulderLines, armpitLines, parts };
 
