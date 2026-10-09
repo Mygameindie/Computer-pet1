@@ -699,8 +699,9 @@
         art.x.drawImage(img, 0, 0, CW, CH);
         if (part.unline) unline(art.x, part.unline);
         if (part.rest) {
-          const skin = skinOf(art.x);
-          if (skin) this.skin = `rgb(${skin[0]},${skin[1]},${skin[2]})`;
+          const skin = CFG.skin ? null : skinOf(art.x);
+          if (CFG.skin) this.skin = CFG.skin;
+          else if (skin) this.skin = `rgb(${skin[0]},${skin[1]},${skin[2]})`;
           // The lumps that travel with the limbs are taken out of the torso...
           art.x.globalCompositeOperation = 'destination-out';
           for (const o of carried) shape(art.x, o.carry);
@@ -952,7 +953,7 @@
         ctx.closePath();
         ctx.fill();
         // ...and the outline along its edge.
-        ctx.strokeStyle = '#000';
+        ctx.strokeStyle = CFG.outline || '#000';
         ctx.lineWidth = L.w * k;
         ctx.lineCap = 'round';
         ctx.beginPath();
@@ -984,7 +985,7 @@
         ctx.save();
         // Fade by thinning, not by transparency: a half-transparent outline
         // shows up as a grey smudge on the skin.
-        ctx.strokeStyle = '#000';
+        ctx.strokeStyle = CFG.outline || '#000';
         ctx.lineWidth = L.w * k * alpha;
         ctx.lineCap = 'round';
         ctx.beginPath();
