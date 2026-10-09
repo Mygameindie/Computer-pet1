@@ -239,6 +239,10 @@ all. That's why the wardrobe currently looks sparse: this repo only ships
 **Outfit presets** live in `outfit_presets.js` — one `clothes` map per look, no
 per-character variants to keep in sync.
 
+## Clothes
+
+See `clothing_template/README.md`: draw on `clothing_template/clothing_template.png`, and `clothing_template/clothing_guide.png` shows which part of the body each area of a garment moves with.
+
 ## Ragdoll art
 
 The pet is drawn from separate part files in `images/parts/`, all 851 × 1134,
