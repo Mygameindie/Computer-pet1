@@ -4,7 +4,7 @@ This branch only holds the pet's artwork, one PNG per body part and per
 clothing item. Every file is 851 × 1134 with a transparent background and lines
 up with `body_parts/base_full_body.png`.
 
-The code lives on the `claude/computer-pet-single-instance-7tth9o` branch. To
+The code lives on the `default` branch. To
 change a picture, edit it here (or anywhere), then copy it into the code branch
 under the path shown below.
 
