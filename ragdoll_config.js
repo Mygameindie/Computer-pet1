@@ -46,7 +46,7 @@
   const soft = {
     CL: { x: 381, y: 676, r: 15, m: 0.4, k: 0.12, anchor: 'torso', max: 26, maxX: 7, gravity: 0.35 },    // chest
     CR: { x: 469, y: 676, r: 15, m: 0.4, k: 0.12, anchor: 'torso', max: 26, maxX: 7, gravity: 0.35 },
-    Hr: { x: 425, y: 950, r: 20, m: 0.8, k: 0.03, anchor: 'head',  max: 400, gravity: 4 },   // end of the back hair: hangs down when the pet is held
+    Hr: { x: 425, y: 950, r: 20, m: 0.8, k: 0.09, anchor: 'head',  max: 400 },   // end of the back hair
     Tt: { x: 425, y: 1015, r: 8, m: 0.5, k: 0.07, anchor: 'torso', max: 400 },  // tip of the tail
   };
 
@@ -73,7 +73,7 @@
     { pivot: 'HipL', tip: 'FL', lo: -12, hi: 50, frame: 'torso' },
     { pivot: 'HipR', tip: 'FR', lo: -50, hi: 12, frame: 'torso' },
     { pivot: 'N',    tip: 'Hd', lo: -30, hi: 30, heldLo: -30, heldHi: 30, frame: 'torso' },
-    { pivot: 'N',    tip: 'Hr', lo: -85, hi: 85, frame: 'head' },
+    { pivot: 'N',    tip: 'Hr', lo: -35, hi: 35, frame: 'head' },
     { pivot: 'P',    tip: 'Tt', lo: -50, hi: 50, frame: 'torso' },
   ];
 
@@ -94,8 +94,8 @@
     { id: 'back_hair',  file: 'back_hair',  optional: true, pivot: 'N', child: 'Hr' },
     { id: 'back_wings', file: 'back_wings', optional: true, pivot: 'N', child: 'P' },
     { id: 'back_tail',  file: 'back_tail',  optional: true, pivot: 'P', child: 'Tt' },
-    { id: 'leg_L', file: 'leg_L', drop: true, bodyKeeps: LEG_DROP, pivot: 'HipL', child: 'FL', region: { t: 'rect', x0: 0,   y0: 868, x1: 425, y1: SRC_H } },
-    { id: 'leg_R', file: 'leg_R', drop: true, bodyKeeps: LEG_DROP, pivot: 'HipR', child: 'FR', region: { t: 'rect', x0: 425, y0: 868, x1: SRC_W, y1: SRC_H } },
+    { id: 'leg_L', file: 'leg_L', drop: true, pivot: 'HipL', child: 'FL', region: { t: 'rect', x0: 0,   y0: 868, x1: 425, y1: SRC_H } },
+    { id: 'leg_R', file: 'leg_R', drop: true, pivot: 'HipR', child: 'FR', region: { t: 'rect', x0: 425, y0: 868, x1: SRC_W, y1: SRC_H } },
     { id: 'arm_L', file: 'arm_L', pivot: 'SL', child: 'HL', region: { t: 'rect', x0: 0,   y0: 606, x1: 346,   y1: 846 } },
     { id: 'arm_R', file: 'arm_R', pivot: 'SR', child: 'HR', region: { t: 'rect', x0: 505, y0: 606, x1: SRC_W, y1: 846 } },
     { id: 'body',  file: 'body',  pivot: 'N', child: 'P', rest: true },
@@ -114,9 +114,9 @@
   // outline from the body's side line (`side`) round to the arm's underside
   // (`arm`). `inner` is a point inside the body that closes the filled area.
   // Fades in over the first few degrees of raise; hidden when the arm is down.
-  const armpitLines = [];   // not drawn: the sprite is left as it was drawn
+  const armpitLines = [];   // not drawn: the zombie sprite is left as it was drawn
 
-  const shoulderLines = [];   // not drawn: the sprite is left as it was drawn
+  const shoulderLines = [];   // not drawn: the zombie sprite is left as it was drawn
 
   // A raised arm lifts its shoulder: the whole arm (with the shoulder lump it
   // carries) is drawn up and a little toward the neck, by up to `up` / `in` source

@@ -9,7 +9,7 @@
 //    1. Add an object to window.OUTFIT_PRESETS.
 //    2. `clothes` maps a category -> the item id from outfit_config.js.
 //       Categories: topUnderwear, bottomUnderwear, onepieceUnderwear,
-//                   top, bottom, dress, shoes, hat.
+//                   top, bottom, dress, socks, shoes, hat.
 //       Any category you leave out is treated as "None" (taken off).
 //    3. `colors` is OPTIONAL. Map a category -> a color name:
 //       Original, Red, Orange, Yellow, Green, Cyan, Blue, Purple, Pink.
@@ -20,55 +20,28 @@
 //      clothes: { top: "top1", bottom: "pants1", shoes: "shoes1" },
 //      colors:  { top: "Blue", bottom: "Green" } }
 //
-//  BOY / GIRL: the pet's gender is set in pet_gender.js. A preset can give the
-//  boy his own version of the look with a `boy` block (and the girl a `girl`
-//  block); the top-level clothes/colors are the default for whoever has no
-//  block. This is how the same preset dresses the girl in a dress and the boy
-//  in a top + pants:
-//
-//    { name: "Party", emoji: "🎀",
-//      clothes: { dress: "dress1", shoes: "shoes1" },       // girl (default)
-//      colors:  { dress: "Red" },
-//      boy: {                                               // boy version
-//        clothes: { top: "top1", bottom: "pants1", shoes: "shoes1" },
-//        colors:  { top: "Red" },
-//      } }
-//
-//  You can write ids either way ("top1" or "top1_2") — they are translated to
-//  the id that exists for the gender being dressed, and anything that gender
-//  doesn't have is simply skipped (taken off).
-//
-//  NOTE: presets only use item ids that exist in outfit_config.js. If you add
-//  new clothes there, you can reference them here right away.
+//  There is only ONE pet in this build, so a preset is a single look — no
+//  per-character variants. Anything the pet doesn't have (no item listed in
+//  outfit_config.js, or a missing PNG) is simply skipped, so a preset can
+//  safely name garments you haven't drawn yet.
 // ===========================================================
 
 window.OUTFIT_PRESETS = [
   {
     name: "Casual",
     emoji: "👕",
-	boy: {
-    clothes: { bottomUnderwear: "boxers1_2",
-      bodysuit: "bodysuit1_2",
-    },
-	  },
+    clothes: { top: "top1", topUnderwear: "topunderwear1", bottomUnderwear: "bottomunderwear1",
+               bottom: "skirt1", socks: "socks1", shoes: "shoes1" },
   },
   {
     name: "Comfy",
     emoji: "🩲",
-    boy: {
-      clothes: { bottomUnderwear: "boxers1" },
-    // Boy version: no top underwear — just boxers.
-   },
+    clothes: { topUnderwear: "topunderwear1", bottomUnderwear: "bottomunderwear1" },
   },
   {
     name: "Swimsuit",
     emoji: "🩱",
     clothes: { topUnderwear: "topunderwear1", bottomUnderwear: "bottomunderwear1" },
-    // Boy version: no one-piece — he swims in boxers.
-    boy: {
-      clothes: { bottomUnderwear: "boxers1" },
-      colors:  { bottomUnderwear: "Cyan" },
-    },
   },
   {
     name: "Birthday Suit",
@@ -87,59 +60,34 @@ window.OUTFIT_PRESETS = [
     if (window.OUTFIT_CONFIG && Array.isArray(window.OUTFIT_CONFIG.categories)) {
       return window.OUTFIT_CONFIG.categories.map(c => c.key);
     }
-    // Fallback: whatever the active outfit object already has.
-    return Object.keys((window.selectedClothes && window.selectedClothes[0]) || {});
+    // Fallback: whatever the current outfit object already has.
+    return Object.keys(window.selectedClothes || {});
   }
 
-  function gender() {
-    return (window.PetGender && window.PetGender.get()) === "boy" ? "boy" : "girl";
-  }
-
-  // Presets are written with plain ids ("top1"). The boy's wardrobe uses the
-  // "_2" names ("top1_2"), so translate each id to the one that actually
-  // exists for the gender being dressed. An item that gender doesn't have
-  // (a dress on a boy) resolves to 0 (None) instead of breaking the look.
+  // An item the pet doesn't have (not in the catalog, or its art failed to
+  // load) resolves to 0 (None), so a preset that names a garment you haven't
+  // drawn yet still applies — the pet just doesn't wear that piece.
   function resolveItem(category, id) {
     if (id === 0 || id === "0" || id == null) return 0;
-    const items = (window.dressUpCatalog && window.dressUpCatalog[0] &&
-      window.dressUpCatalog[0][category] && window.dressUpCatalog[0][category].items) || null;
+    const items = (window.dressUpCatalog && window.dressUpCatalog[category] &&
+      window.dressUpCatalog[category].items) || null;
     if (!items) return id;
-    if (window.PetGender) {
-      const forGender = window.PetGender.itemId(id);
-      if (items[forGender]) return forGender;
-    }
-    if (items[id]) return id;
-    const stripped = String(id).replace(/_\d+$/, "");
-    if (items[stripped]) return stripped;
-    return 0;
+    const it = items[id];
+    return (it && (!it.img || !it.img._failed)) ? id : 0;
   }
 
-  // A preset can define a different look per gender: a `girl`/`boy` block
-  // ({ clothes, colors }) wins for that gender; otherwise the preset's
-  // top-level clothes/colors are used.
-  function outfitForGender(preset) {
-    const per = preset[gender()];
-    // A per-gender clothes list is a complete look of its own, so it does NOT
-    // inherit the other look's colors (those may belong to garments this
-    // gender isn't wearing) — omit colors and you get Original.
-    if (per && per.clothes) return { clothes: per.clothes, colors: per.colors || {} };
-    // Colors-only override: same clothes, different colors for this gender.
-    if (per && per.colors) return { clothes: preset.clothes || {}, colors: per.colors };
-    return { clothes: preset.clothes || {}, colors: preset.colors || {} };
-  }
-
-  // Apply a full preset to the pet (index 0). Every category not named by the
-  // preset is cleared, so a preset always defines the complete look.
+  // Apply a full preset. Every category not named by the preset is cleared, so
+  // a preset always defines the complete look.
   function applyPreset(preset) {
     if (!preset) return;
-    if (window._modeName === "shower") return; // clothes are off in the shower
 
-    if (!Array.isArray(window.selectedClothes)) window.selectedClothes = [{}];
-    if (!Array.isArray(window.clothingColors)) window.clothingColors = [{}];
-    const sel = (window.selectedClothes[0] = window.selectedClothes[0] || {});
-    const col = (window.clothingColors[0] = window.clothingColors[0] || {});
+    if (!window.selectedClothes || typeof window.selectedClothes !== "object") window.selectedClothes = {};
+    if (!window.clothingColors || typeof window.clothingColors !== "object") window.clothingColors = {};
+    const sel = window.selectedClothes;
+    const col = window.clothingColors;
 
-    const { clothes, colors } = outfitForGender(preset);
+    const clothes = preset.clothes || {};
+    const colors = preset.colors || {};
 
     categoryKeys().forEach(k => {
       sel[k] = (clothes[k] != null) ? resolveItem(k, clothes[k]) : 0;
@@ -226,32 +174,16 @@ window.OUTFIT_PRESETS = [
   }
 
   presetBtn.onclick = () => {
-    if (window._modeName === "shower") return;
-    panel.style.display = panel.style.display === "none" ? "block" : "none";
-    if (panel.style.display === "block") renderPanel();
+    const opening = panel.style.display === "none";
+    panel.style.display = opening ? "block" : "none";
+    if (opening) {
+      // Both panels hang in the same slot under the bar — show one at a time.
+      const dress = document.getElementById("dressup-panel");
+      if (dress) dress.style.display = "none";
+      renderPanel();
+    }
   };
 
-  // -------------------------------------------------------------------------
-  // Stay in sync with the shower rules: clothes (and presets) are hidden there.
-  // -------------------------------------------------------------------------
-  function hidePresetUI() {
-    presetBtn.style.display = "none";
-    panel.style.display = "none";
-  }
-  function showPresetUI() {
-    presetBtn.style.display = "block";
-  }
-
-  const _enterShower = window.enterShowerClothesRules;
-  window.enterShowerClothesRules = function () {
-    hidePresetUI();
-    if (typeof _enterShower === "function") return _enterShower.apply(this, arguments);
-  };
-  const _exitShower = window.exitShowerClothesRules;
-  window.exitShowerClothesRules = function () {
-    showPresetUI();
-    if (typeof _exitShower === "function") return _exitShower.apply(this, arguments);
-  };
-
-  if (window._modeName === "shower") hidePresetUI();
+  // Lets the desktop shell open the panel from the tray / right-click menu.
+  window.renderPresetPanel = renderPanel;
 })();

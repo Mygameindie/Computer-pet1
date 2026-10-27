@@ -2,50 +2,42 @@
 <html lang="en">
 
 <head>
-	<!-- Version tag (?v=...) on every script and stylesheet: bump it after changing
-	     any of them, so browsers and GitHub Pages never mix old and new files. -->
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
-	<title>My Pet Game</title>
-	<link rel="stylesheet" href="pet_style.css?v=20261018n" />
-	<link rel="stylesheet" href="scroll.css?v=20261018n">
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;" />
+  <title>Desktop Pet</title>
+  <link rel="stylesheet" href="pet_style.css" />
 </head>
 
 <body>
-	<canvas id="canvas"></canvas>
+  <!-- The pet lives in every overlay window; each window positions it by
+       subtracting its own display origin, so it is only visible on the
+       monitor it is actually standing on. -->
+  <div class="pet" id="pet">
+    <canvas class="pet-canvas"></canvas>
+  </div>
 
-	<div id="ui">
-		<div id="mode-menu">
-			<button id="normal-btn">🧸 Drag</button>
-			<button id="feed-btn">🍖 Feed</button>
-			<button id="shower-btn">🧽 Shower</button>
-			<button id="troll-btn">🧈 Troll</button>
-			<button id="karaoke-btn">🎤 Karaoke</button>
-			<button id="sleep-btn">😴 Sleep</button>
-			<button id="doctor-btn">🩺 Doctor</button>
-			<button id="playground-btn">🛝 Playground</button>
-			<button id="garden-btn">🌱 Garden</button>
-			<button id="confidence-btn">💪 Confidence</button>
-		</div>
-		<div id="hint" class="card small"></div>
-	</div>
+  <!-- Wardrobe dock. outfit_system.js / outfit_presets.js look for these exact
+       ids and adopt them instead of creating their own fixed-position buttons.
+       The dock is pinned to the top of the screen (see pet_style.css). -->
+  <div id="wardrobe-dock">
+    <div id="dock-bar">
+      <button id="dressup-btn">👗 Dress Up</button>
+      <button id="preset-btn">🎀 Outfits</button>
+    </div>
+    <div id="dressup-panel" style="display:none"></div>
+    <div id="preset-panel" style="display:none"></div>
+  </div>
 
-	<script src="hd_canvas.js?v=20261018n"></script>
-	<script src="asset_path_fix.js?v=20261018n"></script>
-	<script src="pet_gender.js?v=20261018n"></script>
-	<script src="pet_art.js?v=20261018n"></script>
-	<script src="mode_manger.js?v=20261018n"></script>
-	<script src="outfit_config.js?v=20261018n"></script>
-	<script src="outfit_system_single_sprite.js?v=20261018n"></script>
-	<script src="outfit_presets.js?v=20261018n"></script>
-	<!-- Ragdoll: the skeleton + physics (ported from Computer-pet) -->
-	<script src="ragdoll_config.js?v=20261018n"></script>
-	<script src="ragdoll.js?v=20261018n"></script>
-	<script src="pet_stats.js?v=20261018n"></script>
-	<script src="pet_modes.js?v=20261018n"></script>
-	<script src="canvas_fix.js?v=20261018n"></script>
-	<script src="ui_cleanup.js?v=20261018n"></script>
-	<script src="pet_toys.js?v=20261018n"></script>
+  <!-- Must load before the outfit system: it rewrites the bare image names used
+       in outfit_config.js ("top1.png") to "images/top1.png". -->
+  <script src="asset_path_fix.js"></script>
+  <script src="outfit_config.js"></script>
+  <script src="outfit_system.js"></script>
+  <script src="outfit_presets.js"></script>
+  <script src="ragdoll_config.js"></script>
+  <script src="ragdoll.js"></script>
+  <script src="pet_desktop.js"></script>
 </body>
 
 </html>
