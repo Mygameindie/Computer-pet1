@@ -601,7 +601,9 @@
     // stiff (optional): garments kept whole over the chest (a top): over the
     // chest they go on the body's over-the-chest layer, but their sleeves and
     // anything else on the arms, legs or head still go with those parts.
-    buildArt(imgs, cloth, cs, hang, over, under, blow, blowFrom, stiff) {
+    // armCloth (optional): { <part id>: canvas } of sleeves drawn as their own
+    // pictures; each is carried whole by that part, on top of its other clothes.
+    buildArt(imgs, cloth, cs, hang, over, under, blow, blowFrom, stiff, armCloth) {
       const CW = Math.round(CFG.SRC_W * cs), CH = Math.round(CFG.SRC_H * cs);
       const mk = (w, h) => { const c = document.createElement('canvas'); c.width = Math.max(1, w); c.height = Math.max(1, h); return c; };
       const mkRead = (w, h) => { const c = mk(w, h); return { c, x: c.getContext('2d', { willReadFrequently: true }) }; };
@@ -778,6 +780,11 @@
             }
           } else {
             w.x.clearRect(0, 0, CW, CH);
+          }
+          const sleeve = armCloth && armCloth[part.id];
+          if (sleeve) {
+            w.x.globalCompositeOperation = 'source-over';
+            w.x.drawImage(sleeve, 0, 0);
           }
           const wb = bboxOf(w.x);
           if (wb) { worn = w.c; box = box ? { x0: Math.min(box.x0, wb.x0), y0: Math.min(box.y0, wb.y0), x1: Math.max(box.x1, wb.x1), y1: Math.max(box.y1, wb.y1) } : wb; }

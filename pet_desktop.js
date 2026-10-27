@@ -167,6 +167,11 @@
     if (pet.img && pet.img.complete && pet.img.naturalWidth) {
       ctx.drawImage(pet.img, x, y, w, h);
     }
+    // Sleeves first: on the ragdoll they sit under the body, as here.
+    if (typeof window.drawOutfitOverlay === 'function') {
+      window.drawOutfitOverlay(ctx, 'stand', x, y, w, h, null, 'arm_L');
+      window.drawOutfitOverlay(ctx, 'stand', x, y, w, h, null, 'arm_R');
+    }
     // Clothes on top, layered by z and tinted, straight from the outfit system.
     if (typeof window.drawOutfitOverlay === 'function') {
       window.drawOutfitOverlay(ctx, 'stand', x, y, w, h);
@@ -227,6 +232,7 @@
     // Plus each garment's optional _over / _under layers (see outfit_system.js).
     const sized = () => { const c = document.createElement('canvas'); c.width = cloth.width; c.height = cloth.height; return c; };
     const hang = sized(), over = sized(), under = sized(), blow = sized(), stiff = sized();
+    const arms = { arm_L: sized(), arm_R: sized() };
     let blowFrom = Infinity;
     if (typeof window.drawOutfitOverlay === 'function') {
       window.drawOutfitOverlay(cloth.getContext('2d'), 'stand', 0, 0, cloth.width, cloth.height, it => !it.stiff && !it.blows);
@@ -241,8 +247,10 @@
       // Stiff garments stay whole over the chest (their sleeves still follow the arms).
       window.drawOutfitOverlay(stiff.getContext('2d'), 'stand', 0, 0, cloth.width, cloth.height, it => it.stiff);
       window.drawOutfitOverlay(under.getContext('2d'), 'stand', 0, 0, cloth.width, cloth.height, null, 'under');
+      // Sleeves drawn as their own pictures go whole with their arm.
+      for (const id in arms) window.drawOutfitOverlay(arms[id].getContext('2d'), 'stand', 0, 0, cloth.width, cloth.height, null, id);
     }
-    pet.body.buildArt(pet.partImgs, cloth, cs, hang, over, under, blow, isFinite(blowFrom) ? blowFrom : null, stiff);
+    pet.body.buildArt(pet.partImgs, cloth, cs, hang, over, under, blow, isFinite(blowFrom) ? blowFrom : null, stiff, arms);
   }
 
   // Feed the scene's state to the skeleton.

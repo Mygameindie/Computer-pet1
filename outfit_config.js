@@ -40,6 +40,10 @@
 //  would tear where the bouncing chest meets the body. Mark it
 //  { id: "top1", stiff: true } and it stays whole on the body.
 //
+//  SLEEVES: <name>_arm_L.png / <name>_arm_R.png (optional) are the garment's
+//  sleeves, one picture per arm. Each goes with its arm whole, never cut up,
+//  and is drawn under the body like the arm itself.
+//
 //  This is a plain JS file (no network/JSON loading) so it can't glitch or
 //  fail to load mid-run — it's the smoothest, simplest setup.
 // ===========================================================
@@ -73,20 +77,8 @@ window.OUTFIT_CONFIG = {
   // THE WARDROBE — every garment the one pet can wear.
   // -------------------------------------------------------------------------
   pet: {
-    topUnderwear:      ["topunderwear1", "topunderwear2", "topunderwear3", "topunderwear4"],
-    bottomUnderwear:   [{ id: "bottomunderwear1", hangs: true }, "bottomunderwear2", "bottomunderwear3", "bottomunderwear4", "boxers1"],
-    onepieceUnderwear: ["onepieceunderwear1"],
-    top:               [{ id: "top1", stiff: true }],
-    bottom:            ["pants1", { id: "skirt1", blows: true }],
-    dress:             ["dress1"],
+    bottomUnderwear:   ["boxers1"],
     bodysuit:          ["bodysuit1"],
-    socks:             ["socks1"],
-    shoes:             ["shoes1"],
-    glove:             ["glove1"],
-    bunnysuitbow:      ["bunnysuitbow1"],
-    glasses:           ["glasses1"],
-    ears:              ["ears1"],
-    hat:               ["hat1"],
   },
 
   // What the pet is wearing on a fresh start. Anything left out starts as None.
