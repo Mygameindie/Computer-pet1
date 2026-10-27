@@ -30,18 +30,17 @@ window.OUTFIT_PRESETS = [
   {
     name: "Casual",
     emoji: "👕",
-    clothes: { top: "top1", topUnderwear: "topunderwear1", bottomUnderwear: "bottomunderwear1",
-               bottom: "skirt1", socks: "socks1", shoes: "shoes1" },
+    clothes: { bottomUnderwear: "boxers1", bodysuit: "bodysuit1" },
   },
   {
     name: "Comfy",
     emoji: "🩲",
-    clothes: { topUnderwear: "topunderwear1", bottomUnderwear: "bottomunderwear1" },
+    clothes: { bottomUnderwear: "boxers1" },
   },
   {
     name: "Swimsuit",
     emoji: "🩱",
-    clothes: { topUnderwear: "topunderwear1", bottomUnderwear: "bottomunderwear1" },
+    clothes: { bottomUnderwear: "boxers1" },
   },
   {
     name: "Birthday Suit",
