@@ -233,6 +233,10 @@
     const sized = () => { const c = document.createElement('canvas'); c.width = cloth.width; c.height = cloth.height; return c; };
     const hang = sized(), over = sized(), under = sized(), blow = sized(), stiff = sized();
     const arms = { arm_L: sized(), arm_R: sized() };
+    // Garments with their own sleeve pictures: the arms take only the sleeves,
+    // the rest of the garment stays whole on the body (its shoulders aren't cut).
+    const ok = im => im && im.complete && im.naturalWidth && !im._failed;
+    const sleeved = sized();
     let blowFrom = Infinity;
     if (typeof window.drawOutfitOverlay === 'function') {
       window.drawOutfitOverlay(cloth.getContext('2d'), 'stand', 0, 0, cloth.width, cloth.height, it => !it.stiff && !it.blows);
@@ -249,6 +253,8 @@
       window.drawOutfitOverlay(under.getContext('2d'), 'stand', 0, 0, cloth.width, cloth.height, null, 'under');
       // Sleeves drawn as their own pictures go whole with their arm.
       for (const id in arms) window.drawOutfitOverlay(arms[id].getContext('2d'), 'stand', 0, 0, cloth.width, cloth.height, null, id);
+      window.drawOutfitOverlay(sleeved.getContext('2d'), 'stand', 0, 0, cloth.width, cloth.height, it => ok(it.arm_L) || ok(it.arm_R));
+      arms.keep = sleeved;
     }
     pet.body.buildArt(pet.partImgs, cloth, cs, hang, over, under, blow, isFinite(blowFrom) ? blowFrom : null, stiff, arms);
   }

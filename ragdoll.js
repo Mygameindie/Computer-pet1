@@ -603,6 +603,8 @@
     // anything else on the arms, legs or head still go with those parts.
     // armCloth (optional): { <part id>: canvas } of sleeves drawn as their own
     // pictures; each is carried whole by that part, on top of its other clothes.
+    // armCloth.keep: the garments those sleeves belong to. The arms leave them
+    // alone and the body keeps them, so a shoulder isn't cut off with the arm.
     buildArt(imgs, cloth, cs, hang, over, under, blow, blowFrom, stiff, armCloth) {
       const CW = Math.round(CFG.SRC_W * cs), CH = Math.round(CFG.SRC_H * cs);
       const mk = (w, h) => { const c = document.createElement('canvas'); c.width = Math.max(1, w); c.height = Math.max(1, h); return c; };
@@ -783,8 +785,23 @@
           }
           const sleeve = armCloth && armCloth[part.id];
           if (sleeve) {
+            if (armCloth.keep) {
+              w.x.globalCompositeOperation = 'destination-out';
+              w.x.drawImage(armCloth.keep, 0, 0);
+            }
             w.x.globalCompositeOperation = 'source-over';
             w.x.drawImage(sleeve, 0, 0);
+          }
+          if (part.rest && armCloth && armCloth.keep) {
+            // ...and the body takes back what the sleeved arms left alone.
+            const k = mkRead(CW, CH);
+            k.x.drawImage(armCloth.keep, 0, 0);
+            k.x.globalCompositeOperation = 'destination-in';
+            const sleevedArms = mkRead(CW, CH);
+            for (const o of regionParts) if (armCloth[o.id]) shape(sleevedArms.x, o.region);
+            k.x.drawImage(sleevedArms.c, 0, 0);
+            w.x.globalCompositeOperation = 'source-over';
+            w.x.drawImage(k.c, 0, 0);
           }
           const wb = bboxOf(w.x);
           if (wb) { worn = w.c; box = box ? { x0: Math.min(box.x0, wb.x0), y0: Math.min(box.y0, wb.y0), x1: Math.max(box.x1, wb.x1), y1: Math.max(box.y1, wb.y1) } : wb; }
