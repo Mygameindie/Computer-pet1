@@ -603,8 +603,9 @@
     // anything else on the arms, legs or head still go with those parts.
     // armCloth (optional): { <part id>: canvas } of sleeves drawn as their own
     // pictures; each is carried whole by that part, on top of its other clothes.
-    // armCloth.keep: the garments those sleeves belong to. The arms leave them
-    // alone and the body keeps them, so a shoulder isn't cut off with the arm.
+    // armCloth.keep: the garments those sleeves belong to. The arms and the head
+    // leave them alone and the body keeps them, so a shoulder isn't cut off
+    // with the arm or the head. Only the legs still take their share.
     buildArt(imgs, cloth, cs, hang, over, under, blow, blowFrom, stiff, armCloth) {
       const CW = Math.round(CFG.SRC_W * cs), CH = Math.round(CFG.SRC_H * cs);
       const mk = (w, h) => { const c = document.createElement('canvas'); c.width = Math.max(1, w); c.height = Math.max(1, h); return c; };
@@ -783,12 +784,13 @@
           } else {
             w.x.clearRect(0, 0, CW, CH);
           }
+          const keepOut = armCloth && armCloth.keep && part.region && !part.drop;
+          if (keepOut) {
+            w.x.globalCompositeOperation = 'destination-out';
+            w.x.drawImage(armCloth.keep, 0, 0);
+          }
           const sleeve = armCloth && armCloth[part.id];
           if (sleeve) {
-            if (armCloth.keep) {
-              w.x.globalCompositeOperation = 'destination-out';
-              w.x.drawImage(armCloth.keep, 0, 0);
-            }
             w.x.globalCompositeOperation = 'source-over';
             w.x.drawImage(sleeve, 0, 0);
           }
@@ -797,9 +799,9 @@
             const k = mkRead(CW, CH);
             k.x.drawImage(armCloth.keep, 0, 0);
             k.x.globalCompositeOperation = 'destination-in';
-            const sleevedArms = mkRead(CW, CH);
-            for (const o of regionParts) if (armCloth[o.id]) shape(sleevedArms.x, o.region);
-            k.x.drawImage(sleevedArms.c, 0, 0);
+            const keptAreas = mkRead(CW, CH);
+            for (const o of regionParts) if (!o.drop) shape(keptAreas.x, o.region);
+            k.x.drawImage(keptAreas.c, 0, 0);
             w.x.globalCompositeOperation = 'source-over';
             w.x.drawImage(k.c, 0, 0);
           }
