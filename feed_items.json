@@ -1,0 +1,68 @@
+{
+  "toolbarTitle": "Feeding Mode",
+  "items": [
+    {
+      "key": "brain",
+      "label": "brain",
+      "imgSrc": "food1.png",
+      "liked": true,
+      "w": 100,
+      "h": 100,
+      "type": "normal"
+    },
+    {
+      "key": "garlic",
+      "label": "garlic",
+      "imgSrc": "food2.png",
+      "liked": false,
+      "w": 100,
+      "h": 100,
+      "type": "normal"
+    },
+    {
+      "key": "fish",
+      "label": "fish",
+      "imgSrc": "food3.png",
+      "liked": true,
+      "w": 100,
+      "h": 100,
+      "type": "normal"
+    },
+    {
+      "key": "chicken",
+      "label": "chicken",
+      "imgSrc": "food4.png",
+      "liked": false,
+      "w": 100,
+      "h": 100,
+      "type": "normal"
+    },
+    {
+      "key": "peppermint",
+      "label": "peppermint",
+      "imgSrc": "food5.png",
+      "liked": true,
+      "w": 120,
+      "h": 120,
+      "type": "normal"
+    },
+    {
+      "key": "giantgummybear",
+      "label": "giantgummybear",
+      "imgSrc": "food6.png",
+      "liked": true,
+      "w": 500,
+      "h": 500,
+      "type": "normal"
+    },
+    {
+      "key": "rainbowgummybear",
+      "label": "rainbowgummybear",
+      "imgSrc": "food7.png",
+      "liked": true,
+      "w": 120,
+      "h": 150,
+      "type": "normal"
+    }
+  ]
+}
